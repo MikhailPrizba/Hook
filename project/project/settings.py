@@ -40,6 +40,7 @@ DJANGO_APPS = [
 
 THIRD_PARTY_APPS = [
     "django_enum",
+    "'rest_framework',"
 ]
 
 LOCAL_APPS = [
@@ -47,6 +48,7 @@ LOCAL_APPS = [
     "hookah",
     "storage",
     "user",
+    "profiles"
 ]
 INSTALLED_APPS = [
     *DJANGO_APPS,

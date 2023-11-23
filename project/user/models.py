@@ -8,6 +8,7 @@ from django_enum import TextChoices
 class User(AbstractUser):
     class UserRoleChoices(TextChoices):
         UNKNOWN = "UNKNOWN"
+        OWNER = "OWNER"
         ADMIN = "ADMIN"
         HOOKAH = "HOOKAH"
 
@@ -18,3 +19,4 @@ class User(AbstractUser):
 
     def __str__(self):
         return self.username
+

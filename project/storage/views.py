@@ -1,3 +1,8 @@
-from django.shortcuts import render
+from rest_framework import viewsets
+from .serializers import TobaccoSerializer
+from .models import Tobacco
 
-# Create your views here.
+
+class TobaccoViewSet(viewsets.ModelViewSet):
+    queryset = Tobacco.objects.all()
+    serializer_class = TobaccoSerializer

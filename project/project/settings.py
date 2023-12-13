@@ -25,7 +25,7 @@ SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["127.0.0.1", "localhost", "fiddle.jshell.net"]
 
 
 # Application definition
@@ -40,16 +40,11 @@ DJANGO_APPS = [
 
 THIRD_PARTY_APPS = [
     "django_enum",
-    "'rest_framework',"
+    "rest_framework",
+    "corsheaders",
 ]
 
-LOCAL_APPS = [
-    "core",
-    "hookah",
-    "storage",
-    "user",
-    "profiles"
-]
+LOCAL_APPS = ["core", "hookah", "storage", "user", "owner", "worker"]
 INSTALLED_APPS = [
     *DJANGO_APPS,
     *THIRD_PARTY_APPS,
@@ -59,6 +54,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
@@ -140,3 +136,5 @@ STATIC_URL = "static/"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 AUTH_USER_MODEL = "user.User"
+
+CORS_ALLOW_ALL_ORIGINS = True

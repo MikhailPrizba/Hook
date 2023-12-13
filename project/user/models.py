@@ -12,11 +12,9 @@ class User(AbstractUser):
         ADMIN = "ADMIN"
         HOOKAH = "HOOKAH"
 
-
     user_role = models.TextField(
-        choices=UserRoleChoices.choices, default=UserRoleChoices.UNKNOWN
+        choices=UserRoleChoices.choices, default=UserRoleChoices.OWNER
     )
 
     def __str__(self):
         return self.username
-

@@ -1,5 +1,13 @@
 from django.contrib import admin
-from .models import Storage, Tobacco
+from .models import Tobacco
+
 # Register your models here.
-admin.site.register(Storage)
-admin.site.register(Tobacco)
+
+
+class TobaccoAdmin(admin.ModelAdmin):
+    list_display = ("brand", "taste", "supplier", "best_before_date", "price", "count")
+    list_filter = ["organization"]
+    search_fields = ("brand", "taste", "supplier")
+
+
+admin.site.register(Tobacco, TobaccoAdmin)

@@ -8,6 +8,8 @@ django = "*"
 django-enum = "*"
 enum-properties = "*"
 djangorestframework = "*"
+django-cors-headers = "*"
+gunicorn = "*"
 
 [dev-packages]
 

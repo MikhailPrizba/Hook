@@ -4,12 +4,15 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-django = "*"
 django-enum = "*"
 enum-properties = "*"
 djangorestframework = "*"
 django-cors-headers = "*"
 gunicorn = "*"
+psycopg2-binary = "*"
+djoser = "*"
+drf-yasg = "*"
+django = "==4.2"
 
 [dev-packages]
 

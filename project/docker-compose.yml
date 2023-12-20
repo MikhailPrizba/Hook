@@ -8,15 +8,15 @@ services:
       - postgres_data:/var/lib/postgresql/data/
     env_file:
       - .env
-    ports:
-      - "5433:5432"
+    expose:
+      - 5432
   web:
     build: .
     volumes:
       - .:/project
       - static:/project/static
-    ports:
-      - "8000:8000"
+    expose:
+      - 8000
     env_file:
       - .env
     command: ["entrypoint/project.sh"]
@@ -25,12 +25,11 @@ services:
   nginx:
     restart: always
     image: nginx:1.23-alpine
-    expose:
-      - 8080
     ports:
-      - "80:8080"
+      - "80:80"
     volumes:
-      - static:/project/static
+      - static:/var/www/html/static
+      - ./nginx.d:/etc/nginx/conf.d
     depends_on:
       - web
 

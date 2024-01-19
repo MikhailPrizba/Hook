@@ -5,8 +5,9 @@ from .models import Generator
 
 
 class GeneratorAdmin(admin.ModelAdmin):
-    list_display = ("main", "secondary", "tint")
+    list_display = ("main", "second", "tint")
     list_filter = ["main"]
-    search_fields = ("main", "secondary", "tint")
+    search_fields = ("main", "second", "tint")
+
 
 admin.site.register(Generator, GeneratorAdmin)

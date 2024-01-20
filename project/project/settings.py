@@ -47,7 +47,7 @@ THIRD_PARTY_APPS = [
     "drf_yasg",
 ]
 
-LOCAL_APPS = ["core", "hookah", "storage", "user", "owner", "worker"]
+LOCAL_APPS = ["core", "hookah", "storage", "user", "owner", "worker", "taste_generator"]
 INSTALLED_APPS = [
     *DJANGO_APPS,
     *THIRD_PARTY_APPS,

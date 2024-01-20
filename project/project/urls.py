@@ -46,6 +46,7 @@ urlpatterns = [
     path("api/v1/worker/", include("worker.urls")),
     path("api/v1/hookah/", include("hookah.urls")),
     path("api/v1/storage/", include("storage.urls")),
+    path("api/v1/generator/", include("taste_generator.urls")),
     re_path(r'^swagger(?P<format>\.json|\.yaml)$', schema_view.without_ui(cache_timeout=0), name='schema-json'),
     re_path(r'^api/v1/auth/', include('djoser.urls')),
     re_path(r'^api/v1/auth/', include('djoser.urls.authtoken')),

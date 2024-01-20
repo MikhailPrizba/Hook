@@ -3,9 +3,9 @@ from rest_framework.permissions import IsAuthenticated
 
 from .serializers import WorkerSerializer
 from .models import Worker
+from core.views import DeleteViewMixin
 
-
-class WorkerViewSet(viewsets.ModelViewSet):
+class WorkerViewSet(DeleteViewMixin,viewsets.ModelViewSet):
     queryset = Worker.objects.all()
     serializer_class = WorkerSerializer
     permission_classes = [IsAuthenticated]

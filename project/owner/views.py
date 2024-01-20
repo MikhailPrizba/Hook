@@ -1,9 +1,9 @@
 from rest_framework import viewsets
 from .serializers import OwnerSerializer
 from .models import Owner
+from core.views import DeleteViewMixin
 
-
-class OwnerViewSet(viewsets.ModelViewSet):
+class OwnerViewSet(DeleteViewMixin,viewsets.ModelViewSet):
     queryset = Owner.objects.all()
     serializer_class = OwnerSerializer
 

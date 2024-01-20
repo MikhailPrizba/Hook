@@ -1,9 +1,10 @@
 from rest_framework import viewsets
 from .serializers import OrganizationSerializer
 from .models import Organization
+from core.views import DeleteViewMixin
 
 
-class OrganiztionViewSet(viewsets.ModelViewSet):
+class OrganiztionViewSet(DeleteViewMixin,viewsets.ModelViewSet):
     queryset = Organization.objects.all()
     serializer_class = OrganizationSerializer
 

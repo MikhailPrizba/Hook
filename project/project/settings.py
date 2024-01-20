@@ -20,7 +20,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY =  os.environ.get('DJANGO_SECRET_KEY')
+SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -42,12 +42,12 @@ THIRD_PARTY_APPS = [
     "rest_framework",
     "rest_framework.authtoken",
     "django_enum",
-    "corsheaders", 
+    "corsheaders",
     "djoser",
     "drf_yasg",
 ]
 
-LOCAL_APPS = ["core", "hookah", "storage", "user", "owner", "worker"]
+LOCAL_APPS = ["core", "hookah", "storage", "user", "owner", "worker", "taste_generator"]
 INSTALLED_APPS = [
     *DJANGO_APPS,
     *THIRD_PARTY_APPS,
@@ -163,8 +163,6 @@ REST_FRAMEWORK = {
 
 
 DJOSER = {
-
-
     "SERIALIZERS": {
         "user": "user.serializers.UserSerializer",
         "current_user": "user.serializers.UserSerializer",

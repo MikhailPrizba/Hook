@@ -1,11 +1,12 @@
 from user.serializers import UserSerializer
 from rest_framework import serializers
 
+
 class SerializerUpdateMixin:
     def update(self, instance, validated_data):
-        instance.some_field = validated_data.get('is_active', instance.is_active)
+        instance.some_field = validated_data.get("is_active", instance.is_active)
 
-        user_data = validated_data.pop('user', None)
+        user_data = validated_data.pop("user", None)
         if user_data:
             user_instance = instance.user
             user_serializer = UserSerializer(user_instance, data=user_data)

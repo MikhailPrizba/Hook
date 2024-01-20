@@ -12,6 +12,7 @@ class Tobacco(models.Model):
     supplier = models.CharField(max_length=255)
     taste = models.CharField(max_length=255)
     taste_group = models.CharField(max_length=255)
+    purchase_date = models.DateTimeField()
     best_before_date = models.DateTimeField()
     price = models.DecimalField(
         default=0, max_digits=12, decimal_places=2, validators=[MinValueValidator(0.00)]

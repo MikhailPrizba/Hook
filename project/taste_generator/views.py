@@ -16,6 +16,7 @@ class GeneratorViewSet(DeleteViewMixin, viewsets.ModelViewSet):
         filtered_data = []
         random_records = Generator.objects.order_by("?")[:3]
         for random_record in random_records:
+            data = []
             min_counts = {"main": 12, "second": 6, "tint": 2}
 
             for combination in ['main', 'second', 'tint']:
@@ -26,6 +27,7 @@ class GeneratorViewSet(DeleteViewMixin, viewsets.ModelViewSet):
                     ).order_by("?").values().first()
                 )
                 if queryset:
-                    filtered_data.append(queryset)
+                    data.append(queryset)
+            filtered_data.append(data)
 
         return Response(filtered_data)

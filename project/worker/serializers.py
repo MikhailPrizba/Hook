@@ -4,7 +4,7 @@ from user.serializers import UserSerializer
 from core.serializers import SerializerUpdateMixin
 
 
-class WorkerSerializer(SerializerUpdateMixin,serializers.ModelSerializer):
+class WorkerSerializer(SerializerUpdateMixin, serializers.ModelSerializer):
     user = UserSerializer()
 
     class Meta:

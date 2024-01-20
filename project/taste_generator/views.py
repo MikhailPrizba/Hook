@@ -19,12 +19,15 @@ class GeneratorViewSet(DeleteViewMixin, viewsets.ModelViewSet):
             data = []
             min_counts = {"main": 12, "second": 6, "tint": 2}
 
-            for combination in ['main', 'second', 'tint']:
+            for combination in ["main", "second", "tint"]:
                 queryset = (
                     Tobacco.objects.filter(
                         taste_group=getattr(random_record, combination),
                         weight__gt=min_counts.get(combination, 0),
-                    ).order_by("?").values().first()
+                    )
+                    .order_by("?")
+                    .values()
+                    .first()
                 )
                 if queryset:
                     data.append(queryset)

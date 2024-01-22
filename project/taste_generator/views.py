@@ -9,7 +9,7 @@ from rest_framework.response import Response
 
 class GeneratorViewSet(DeleteViewMixin, viewsets.ModelViewSet):
     serializer_class = GeneratorSerializer
-    queryset = Generator.objects.all()
+    queryset = Generator.objects.filter(is_active=True)
 
     @action(detail=False)
     def get_random_recipes(self, request, *args, **kwargs):

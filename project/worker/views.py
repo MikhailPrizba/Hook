@@ -7,7 +7,7 @@ from core.views import DeleteViewMixin
 
 
 class WorkerViewSet(DeleteViewMixin, viewsets.ModelViewSet):
-    queryset = Worker.objects.all()
+    queryset = Worker.objects.filter(is_active=True)
     serializer_class = WorkerSerializer
     permission_classes = [IsAuthenticated]
 

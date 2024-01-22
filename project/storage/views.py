@@ -5,5 +5,5 @@ from core.views import DeleteViewMixin
 
 
 class TobaccoViewSet(DeleteViewMixin, viewsets.ModelViewSet):
-    queryset = Tobacco.objects.all()
+    queryset = Tobacco.objects.filter(is_active=True)
     serializer_class = TobaccoSerializer

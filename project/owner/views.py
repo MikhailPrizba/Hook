@@ -5,7 +5,7 @@ from core.views import DeleteViewMixin
 
 
 class OwnerViewSet(DeleteViewMixin, viewsets.ModelViewSet):
-    queryset = Owner.objects.all()
+    queryset = Owner.objects.filter(is_active=True)
     serializer_class = OwnerSerializer
 
     def perform_create(self, serializer):

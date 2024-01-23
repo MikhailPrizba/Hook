@@ -5,7 +5,7 @@ from .models import Tobacco
 
 
 class TobaccoAdmin(admin.ModelAdmin):
-    list_display = ("brand", "taste", "taste_group", "weight","supplier", "purchase_date", "best_before_date", "price")
+    list_display = ("brand", "taste", "taste_group", "weight", "supplier", "purchase_date", "best_before_date", "price")
     list_filter = ["organization"]
     search_fields = ("brand", "taste", "supplier")
 

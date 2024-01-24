@@ -32,7 +32,7 @@ services:
     volumes:
       - static:/var/www/html/static
       - ./nginx.d:/etc/nginx/conf.d
-      - ./src:/usr/share/nginx/html
+      - ./front/src:/usr/share/nginx/html
     depends_on:
       - web
   

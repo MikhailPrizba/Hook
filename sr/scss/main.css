@@ -1,0 +1,905 @@
+@charset "UTF-8";
+@font-face {
+  font-family: "Manrope";
+  src: url("../../assets/fonts/Manrope-Regular.ttf") format("truetype"), url("../../assets/fonts/Manrope-Regular.woff") format("woff"), url("../../assets/fonts/Manrope-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Manrope";
+  src: url("../../assets/fonts/Manrope-Medium.ttf") format("truetype"), url("../../assets/fonts/Manrope-Medium.woff") format("woff"), url("../../assets/fonts/Manrope-Medium.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Manrope";
+  src: url("../../assets/fonts/Manrope-SemiBold.ttf") format("truetype"), url("../../assets/fonts/Manrope-SemiBold.woff") format("woff"), url("../../assets/fonts/Manrope-SemiBold.woff2") format("woff2");
+  font-weight: 600;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Manrope";
+  src: url("../../assets/fonts/Manrope-Bold.ttf") format("truetype"), url("../../assets/fonts/Manrope-Bold.woff") format("woff"), url("../../assets/fonts/Manrope-Bold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+}
+html {
+  font-size: 10px;
+}
+
+body {
+  font-family: "Manrope", sans-serif;
+}
+
+.locked {
+  overflow: hidden; /* Блокирует прокрутку на body */
+  height: 100%; /* Фиксирует высоту body */
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  list-style: none;
+  text-decoration: none;
+}
+
+section {
+  display: none;
+  padding: 20px;
+}
+
+.active-section {
+  display: block;
+}
+
+.content {
+  margin-left: 80px; /* Должно соответствовать ширине хедера */
+  width: calc(100% - 80px); /* Вычитаем ширину хедера */
+  height: 100vh;
+  overflow: auto;
+}
+
+.page-container {
+  display: none;
+}
+
+.menu__item-btn {
+  display: flex;
+  width: 260px;
+  height: 56px;
+  padding: 14px 99px;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10px;
+  background: var(--F9882B, #F9882B);
+}
+
+.button-accent:hover {
+  border: 1px solid var(--F9882B, #F9882B);
+  background: var(--FAA055, #FAA055);
+  box-shadow: 0px 3px 4px 0px rgba(0, 0, 0, 0.12);
+}
+
+/* Стили для активной кнопки, если нужно */
+.button-accent:active {
+  border: 1px solid var(--F9882B, #F9882B);
+  background: var(--FFFFFF, #FFF);
+}
+
+.output-btn {
+  display: flex;
+  padding: 14px 99px;
+  border-radius: 10px;
+  border: 2px solid var(--0F0F0F, #0F0F0F);
+  margin-bottom: 22px;
+  background: transparent;
+  cursor: pointer;
+}
+
+.output-btn:hover {
+  border: 2px solid var(--F9882B, #F9882B);
+  box-shadow: 0px 3px 4px 0px rgba(0, 0, 0, 0.12);
+}
+
+.output-btn:active {
+  border: 2px solid var(--F9882B, #F9882B);
+  background: var(--FBB880, #FBB880);
+}
+
+.techSupport {
+  display: flex;
+  margin-bottom: 22px;
+  color: #F9892B;
+  font-family: Manrope;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+  cursor: pointer;
+  background-color: transparent;
+  border: none;
+}
+
+.product-form {
+  display: none;
+  position: relative;
+  z-index: 5;
+  color: #333;
+  width: 600px;
+  margin: -415px auto;
+  border-radius: 20px;
+  border: 1px solid var(--F9882B, #F9882B);
+  background: var(--FFFFFF, #FFF);
+  box-shadow: 0px 1px 4px 0px rgba(0, 0, 0, 0.25);
+  overflow: hidden;
+  /* max-height: 600px;
+  overflow-y: auto; */
+}
+
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 4;
+}
+
+.product-form__close {
+  position: absolute;
+  right: 20px; /* Уменьшено значение отступа справа */
+  top: 10px; /* Добавлен отступ сверху */
+  font-size: 30px;
+  font-weight: bold;
+  cursor: pointer;
+  color: #888;
+}
+
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+  border-bottom: 1px solid var(--FAA055, #FAA055);
+  background: var(--FEF3EA, #FEF3EA);
+}
+
+.tab {
+  color: var(--0F0F0F, #0F0F0F);
+  text-align: center;
+  /* Caption 1/bold */
+  font-family: Manrope;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+  padding: 18px 11px;
+  gap: 10px;
+}
+
+.close-tab {
+  margin-left: 5px;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.add-tab {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 24px;
+  /* border-radius: 8px; */
+  padding: 0 10px;
+}
+
+/* .form-content {
+  margin-bottom: 15px;
+} */
+.form-content label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+  font-family: Manrope;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal; /* Добавляем жирный шрифт для меток */
+}
+
+.form-content input[type=text],
+.form-content select,
+.form-content input[type=date],
+.form-content input[type=number] {
+  box-sizing: border-box;
+  width: 100%; /* Растягиваем поля ввода на всю ширину родителя */
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px; /* Устанавливаем размер шрифта */
+}
+
+.form-body .input-group {
+  margin-bottom: 15px;
+}
+
+.form-body {
+  padding: 34px 112px;
+  max-height: 450px; /* Пример фиксированной максимальной высоты */
+  overflow-y: auto; /* Активирует прокрутку, если содержимое превышает 600px */
+}
+
+.form-body label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: center;
+  border-top: 1px solid var(--F9882B, #F9882B);
+  background: var(--FFFFFF, #FFF);
+  padding: 24px 0px;
+  gap: 10px;
+}
+
+.form-actions button {
+  align-items: center;
+  padding: 10px 52px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.save {
+  background: var(--F9882B, #F9882B);
+  border: none;
+}
+
+.save:hover {
+  border: 1px solid var(--F9882B, #F9882B);
+  box-shadow: 0px 3px 4px 0px rgba(0, 0, 0, 0.12);
+}
+
+.save:active {
+  border: 1px solid var(--F9882B, #F9882B);
+  background: var(--FBB880, #FBB880);
+}
+
+.cancel {
+  border: 1px solid #000;
+  background: transparent;
+  cursor: pointer;
+}
+
+.cancel:hover {
+  border: 1px solid var(--F9882B, #F9882B);
+  box-shadow: 0px 3px 4px 0px rgba(0, 0, 0, 0.12);
+}
+
+.cancel:active {
+  border: 1px solid var(--F9882B, #F9882B);
+  background: var(--FBB880, #FBB880);
+}
+
+/* Стили для активной вкладки */
+.tab.active {
+  background: var(--FAA055, #FAA055); /* цвет фона для активной вкладки */
+  color: #0F0F0F; /* Белый цвет текста для контраста */
+  font-weight: bold; /* Жирное начертание текста */
+  position: relative; /* Позиционирование для возможного добавления декоративных элементов */
+}
+
+/* Наведение на вкладки */
+.tab:hover {
+  background-color: #FDDBBF; /* Светлее при наведении */
+  cursor: pointer;
+}
+
+.tab.active:hover {
+  background: var(--FAA055, #FAA055); /* Цвет активной вкладки остается неизменным при наведении */
+}
+
+/* Стили для модального окна */
+.confirmationModal {
+  z-index: 10;
+  display: none;
+  position: fixed;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.8);
+  /* display: flex; */
+  justify-content: center;
+  align-items: center;
+}
+
+/* Стили для контента модального окна */
+.confirmationModal__content {
+  position: relative;
+  background: white;
+  border-radius: 5px;
+  width: 600px;
+  border-radius: 20px;
+  border: 1px solid var(--F9882B, #F9882B);
+  background: var(--FFFFFF, #FFF);
+  overflow: hidden;
+}
+
+.confirmationModal__header {
+  padding: 20px 0;
+  color: #000;
+  text-align: center;
+  font-family: Manrope;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+  background: var(--FAA055, #FAA055);
+}
+
+.confirmationModal__close {
+  position: absolute;
+  right: 20px; /* Уменьшено значение отступа справа */
+  top: 10px; /* Добавлен отступ сверху */
+  font-size: 30px;
+  font-weight: bold;
+  cursor: pointer;
+  color: #888; /* Изменен цвет крестика для лучшей видимости */
+}
+
+.confirmationModal__body {
+  font-family: Manrope;
+  font-style: normal;
+  text-align: center;
+  line-height: normal;
+}
+
+.confirmationModal__body h4 {
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.confirmationModal__body p {
+  font-size: 16px;
+  font-weight: 400;
+}
+
+.confirmationModal__button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  padding-bottom: 40px;
+}
+
+/* Дополнительные стили для кнопок в модальном окне */
+#confirmDelete,
+#cancelDelete {
+  padding: 10px 20px;
+  margin-top: 10px;
+  font-size: 16px;
+  cursor: pointer;
+  border: none;
+  border-radius: 5px;
+  transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+}
+
+#cancelDelete {
+  background-color: transparent;
+  border-radius: 10px;
+  border: 1px solid var(--0F0F0F, #0F0F0F);
+  color: var(--0F0F0F, #0F0F0F);
+}
+
+#confirmDelete {
+  border-radius: 10px;
+  background: #EB5E5E;
+  color: white;
+}
+
+/* При наведении добавлен эффект тени для кнопок */
+#cancelDelete:hover,
+#confirmDelete:hover {
+  background: var(--FAA055, #FAA055);
+  color: white;
+}
+
+#cancelDelete:active,
+#confirmDelete:active {
+  background: var(--FAA055, #FAA055);
+  color: white;
+  border-color: transparent; /* убираем границу при нажатии */
+}
+
+.save:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  border-right: 1px solid #F9892B;
+  background: #FFF;
+  padding: 20px 20px;
+  width: 320px;
+  height: 100vh; /* Полная высота экрана */
+  transition: width 0.5s;
+}
+
+.navigation {
+  display: flex;
+  flex-direction: column;
+}
+
+.logo {
+  display: flex;
+  justify-content: center;
+  margin-top: 50px;
+  margin-bottom: 155px;
+}
+.logo img {
+  width: 231px;
+  height: 40px;
+}
+
+.menu {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+.menu__item {
+  display: flex;
+  gap: 28;
+}
+.menu__item-link {
+  color: #0F0F0F;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 23.5px; /* 117.5% */
+  text-align: center;
+}
+.menu__item-btn {
+  padding: 10px 16px;
+  justify-content: center;
+  align-items: center;
+  border-radius: 20px;
+  border: 1px solid #FFF;
+}
+
+.supports {
+  display: flex;
+  flex-direction: column;
+}
+
+.supports span {
+  margin-left: 10px;
+}
+
+.menu__item .ri,
+.supports .output-btn .ri {
+  display: none;
+}
+
+/* Style for active menu item */
+.menu__item.active .menu__item-link {
+  background-color: #F9892B; /* Change this to the color you prefer */
+}
+
+/* Style for the burger menu button */
+.burger-menu {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  width: 30px; /* Ширина кнопки */
+  height: 25px; /* Высота кнопки */
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  transition: margin-left 0.7s ease;
+}
+
+.burger-menu span {
+  display: block;
+  width: 100%;
+  height: 3px; /* Высота каждой линии */
+  background-color: #F9892B; /* Цвет линий */
+  transition: all 0.7s ease;
+}
+
+/* Стили для свернутого состояния */
+.header.collapsed .burger-menu {
+  position: absolute;
+  top: 5%; /* Центрировать по вертикали */
+  left: 50%; /* Центрировать по горизонтали */
+  transform: translate(-50%, -50%); /* Сместить к центру */
+}
+
+/* Стили для раскрытого состояния */
+.header:not(.collapsed) .burger-menu {
+  position: absolute;
+  top: 20px; /* Отступ сверху */
+  right: 20px; /* Отступ справа */
+  transform: none; /* Убрать смещение */
+  width: 15px;
+}
+
+/* Стили для крестика */
+.burger-menu span:nth-child(1) {
+  transform: rotate(45deg) translate(5px, 5px);
+}
+
+.burger-menu span:nth-child(2) {
+  opacity: 0;
+}
+
+.burger-menu span:nth-child(3) {
+  transform: rotate(-45deg) translate(7px, -7px);
+}
+
+/* Стили для бургера, когда меню свернуто */
+.header.collapsed .burger-menu span:nth-child(1),
+.header.collapsed .burger-menu span:nth-child(3) {
+  transform: none;
+  translate: 0;
+}
+
+.header.collapsed .burger-menu span:nth-child(2) {
+  opacity: 1;
+}
+
+.navigation.is-active {
+  display: flex;
+}
+
+.header.collapsed {
+  width: 80px;
+  transition: width 0.5s;
+}
+
+.header.collapsed .menu__item-link span,
+.header.collapsed .logo_img,
+.header.collapsed .output-btn span,
+.header.collapsed .techSupport span {
+  display: none; /* скрыть текст и лого в сжатом состоянии */
+}
+
+.header.collapsed .menu__item .ri,
+.header.collapsed .supports .ri {
+  display: block;
+  color: #2F2B43;
+}
+
+/* Уменьшаем размер иконок когда хедер сжат */
+.header.collapsed .menu__item-link i,
+.header.collapsed .output-btn i,
+.header.collapsed .techSupport i {
+  font-size: 28px; /* размер иконки */
+}
+
+.header.collapsed .menu__item-link,
+.header.collapsed .menu__item-btn,
+.header.collapsed .output-btn,
+.header.collapsed .techSupport {
+  background: none;
+  border: none;
+  width: auto; /* или подходящая ширина */
+  padding: 0; /* убрать внутренние отступы */
+}
+
+.header.collapsed .menu__item-btn {
+  justify-content: center; /* Центрировать иконку внутри кнопки */
+}
+
+.startScrin {
+  margin-left: 320px;
+}
+
+.stock__header {
+  display: flex;
+  justify-content: space-between;
+  padding: 18px 0;
+  border-bottom: 0.6px solid #F9892B;
+}
+
+.stock__header-search {
+  display: flex;
+  align-items: center;
+  height: 38px;
+  border-radius: 10px;
+  border: 1px solid var(--FDCFAA, #FDCFAA);
+  background: #FFF;
+}
+
+.search-form {
+  display: flex;
+  align-items: center;
+}
+
+.stock__header-search button {
+  border: none;
+  background: none;
+  margin: 0 10px;
+}
+
+.stock__header-search button i {
+  font-size: 18px;
+}
+
+.stock__header-search input[type=search] {
+  border: none; /* Убираем границу у input */
+  outline: none; /* Убираем фокусную рамку браузера */
+  padding: 5px 10px; /* Отступы для текста внутри input */
+  font-size: 15px; /* Размер шрифта текста */
+  background: transparent; /* Прозрачный фон input */
+  color: #000000; /* Цвет текста */
+  width: 300px;
+  font-family: Manrope;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+}
+
+.stock__header-buttens {
+  display: flex;
+  gap: 20px;
+}
+
+.stock__btn,
+.stock__btn-add {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: none;
+  gap: 6px;
+  padding: 10px 15px;
+  border-radius: 10px;
+  color: var(--0F0F0F, #0F0F0F);
+  text-align: center;
+  font-family: Manrope;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+}
+
+.stock__btn-add {
+  background: var(--F9882B, #F9882B);
+  cursor: pointer;
+}
+
+.stock__btn-history {
+  background: transparent;
+  border-radius: 10px;
+  border: 1px solid #000;
+  cursor: pointer;
+}
+
+.stock__btn-history:hover {
+  border: 1px solid var(--F9882B, #F9882B);
+  box-shadow: 0px 3px 4px 0px rgba(0, 0, 0, 0.12);
+}
+
+.stock__btn-history:active {
+  border: 1px solid var(--F9882B, #F9882B);
+  background: var(--FBB880, #FBB880);
+}
+
+.stok__main {
+  padding: 30px 0px;
+}
+
+.stock__table {
+  border-radius: 20px 20px 0px 0px;
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.stock__table thead tr:first-child th:first-child {
+  border-top-left-radius: 20px; /* Скругление левого верхнего угла */
+}
+
+.stock__table thead tr:first-child th:last-child {
+  border-top-right-radius: 20px; /* Скругление правого верхнего угла */
+}
+
+.stock__thead th {
+  padding: 20px;
+  color: #1D1D1D;
+  text-align: center;
+  font-family: Manrope;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+}
+
+.stock__thead {
+  background: var(--F9882B, #F9882B);
+}
+
+.stock__table td {
+  padding: 10px;
+  border-bottom: 1px solid #ddd; /* Граница между строками */
+}
+
+td {
+  text-align: center;
+}
+
+.stock__box {
+  margin-top: 150px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.stock__box-img {
+  width: 226.308px;
+  height: 136px;
+}
+
+.stock__box-text {
+  padding-top: 20px;
+  color: #000;
+  font-family: Manrope;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+  letter-spacing: 0.16px;
+  text-align: center;
+}
+
+.options-button {
+  background-color: transparent;
+  border: 1px solid salmon;
+}
+
+.edit-input {
+  width: 100%;
+  padding: 5px;
+  box-sizing: border-box; /* Чтобы ширина инпута включала padding */
+}
+
+.save-button {
+  /* Стили для кнопки "Сохранить" */
+  margin-left: 10px;
+  padding: 5px 10px;
+}
+
+.edit-input {
+  width: 100%;
+  padding: 5px;
+  box-sizing: border-box;
+}
+
+.wrap-authorization {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.logo-authorization {
+  margin-top: 120px;
+}
+
+.authorization {
+  margin-top: 78px;
+  margin-bottom: 40px;
+}
+
+.authorization__header {
+  padding: 22px 146px 23px 145px;
+  justify-content: center;
+  align-items: center;
+  border-radius: 20px 20px 0px 0px;
+  background: #F9892B;
+}
+
+.authorization__header h2 {
+  color: #1C1C1C;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+}
+
+.authorization__form {
+  display: flex;
+  padding: 43px 101px 42px 102px;
+  justify-content: center;
+  align-items: center;
+  border-radius: 0px 0px 20px 20px;
+  border: 1px solid #F9892B;
+}
+
+.form-input {
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-radius: 10px;
+  border: 1px solid var(--FDCFAA, #FDCFAA);
+  background: #FFF;
+}
+
+.form-input i {
+  width: 18px;
+  height: 18px;
+  padding-left: 8px;
+}
+
+.form-input label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.form-input input[type=text],
+.form-input input[type=password],
+.form-input input[type=submit] {
+  width: 80%;
+  padding-top: 14px;
+  padding-bottom: 14px;
+  background-color: transparent;
+  border: none; /* Без границ для input */
+  outline: none; /* Убрать контур */
+}
+
+.form-input input[type=submit] {
+  display: flex;
+  width: 180px;
+  height: 40px;
+  padding: 14px 90px;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10px;
+  background: var(--F9882B, #F9882B);
+  cursor: pointer;
+}
+
+.form-input input[type=submit]:hover {
+  border: 1px solid var(--F9882B, #F9882B);
+  box-shadow: 0px 3px 4px 0px rgba(0, 0, 0, 0.12);
+}
+
+.form-input input[type=submit]:active {
+  border: 1px solid var(--F9882B, #F9882B);
+  background: var(--FBB880, #FBB880);
+}
+
+.image-container {
+  width: 100%;
+  display: flex;
+  position: relative;
+  height: 252px;
+  overflow: hidden;
+}
+
+.image__wave {
+  position: absolute;
+  width: 100%;
+  height: 252px;
+  background-repeat: no-repeat;
+  background-size: contain;
+  overflow: hidden; /* Или используйте 'contain', в зависимости от нужного эффекта */
+}
+
+#wave1 {
+  background-image: url("../../assets/img/GroupWave.jpg");
+  z-index: 1;
+  top: 0;
+  left: 0;
+}/*# sourceMappingURL=main.css.map */

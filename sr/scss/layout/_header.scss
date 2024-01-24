@@ -1,0 +1,195 @@
+
+
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; 
+  align-items: center;
+  border-right: 1px solid #F9892B;
+  background: #FFF;
+  padding: 20px 20px;
+  width: 320px;
+  height: 100vh; /* Полная высота экрана */
+
+  transition: width 0.5s;
+}
+
+.navigation{
+  display: flex;
+  flex-direction: column;
+}
+
+.logo{
+  display: flex;
+  justify-content: center;
+  margin-top: 50px;
+  margin-bottom: 155px;
+  & img{
+    width: 231px;
+    height: 40px;
+  }
+}
+
+.menu {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+
+  &__item {
+    display: flex;
+    gap: 28;
+  }
+
+
+  &__item-link {
+
+    color: #0F0F0F;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 23.5px; /* 117.5% */
+    text-align: center;
+
+  }
+
+  &__item-btn {
+    padding: 10px 16px;
+    justify-content: center;
+    align-items: center;
+    
+    border-radius: 20px;
+    border: 1px solid #FFF;
+  }
+
+}
+.supports {
+  display: flex;
+  flex-direction: column;
+}
+
+.supports span {
+  margin-left: 10px; 
+}
+
+.menu__item .ri,
+.supports .output-btn .ri {
+display: none;
+}
+
+
+
+/* Style for active menu item */
+.menu__item.active .menu__item-link {
+  background-color: #F9892B; /* Change this to the color you prefer */
+}
+
+/* Style for the burger menu button */
+.burger-menu {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  width: 30px; /* Ширина кнопки */
+  height: 25px; /* Высота кнопки */
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  transition: margin-left 0.7s ease; 
+
+}
+
+.burger-menu span {
+  display: block;
+  width: 100%;
+  height: 3px; /* Высота каждой линии */
+  background-color: #F9892B; /* Цвет линий */
+  transition: all 0.7s ease;
+}
+
+/* Стили для свернутого состояния */
+.header.collapsed .burger-menu {
+  position: absolute;
+  top: 5%; /* Центрировать по вертикали */
+  left: 50%; /* Центрировать по горизонтали */
+  transform: translate(-50%, -50%); /* Сместить к центру */
+}
+
+/* Стили для раскрытого состояния */
+.header:not(.collapsed) .burger-menu {
+  position: absolute;
+  top: 20px; /* Отступ сверху */
+  right: 20px; /* Отступ справа */
+  transform: none; /* Убрать смещение */
+  width: 15px;
+}
+
+
+/* Стили для крестика */
+.burger-menu span:nth-child(1) {
+  transform: rotate(45deg) translate(5px, 5px);
+}
+
+.burger-menu span:nth-child(2) {
+  opacity: 0;
+}
+
+.burger-menu span:nth-child(3) {
+  transform: rotate(-45deg) translate(7px, -7px);
+}
+
+/* Стили для бургера, когда меню свернуто */
+.header.collapsed .burger-menu span:nth-child(1),
+.header.collapsed .burger-menu span:nth-child(3) {
+    transform: none;
+    translate: 0;
+}
+
+.header.collapsed .burger-menu span:nth-child(2) {
+    opacity: 1;
+}
+
+.navigation.is-active {
+  display: flex; 
+}
+.header.collapsed {
+  width: 80px; 
+  transition: width 0.5s; 
+}
+
+.header.collapsed .menu__item-link span,
+.header.collapsed .logo_img,
+.header.collapsed .output-btn span, 
+.header.collapsed .techSupport span{
+  display: none; /* скрыть текст и лого в сжатом состоянии */
+}
+.header.collapsed .menu__item .ri,
+.header.collapsed .supports .ri{
+  display: block;
+  color: #2F2B43;
+}
+
+
+/* Уменьшаем размер иконок когда хедер сжат */
+.header.collapsed .menu__item-link i,
+.header.collapsed .output-btn i,
+.header.collapsed .techSupport i {
+  
+  font-size: 28px; /* размер иконки */
+}
+.header.collapsed .menu__item-link,
+.header.collapsed .menu__item-btn,
+.header.collapsed .output-btn,
+.header.collapsed .techSupport {
+  background: none;
+  border: none;
+    width: auto; /* или подходящая ширина */
+  padding: 0; /* убрать внутренние отступы */
+}
+
+.header.collapsed .menu__item-btn {
+  justify-content: center; /* Центрировать иконку внутри кнопки */
+}

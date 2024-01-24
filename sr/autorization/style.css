@@ -1,0 +1,77 @@
+.center-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.authorization {
+}
+
+.authorization__header {
+  padding: 22px 146px 23px 145px;
+  justify-content: center;
+  align-items: center;
+  border-radius: 20px 20px 0px 0px;
+background: #F9892B;
+}
+
+
+.authorization__header h2 {
+  color: #1C1C1C;
+font-size: 20px;
+font-style: normal;
+font-weight: 700;
+line-height: normal;
+}
+
+.authorization__form{
+
+  display: flex;
+  padding: 43px 101px 42px 102px;
+  justify-content: center;
+  align-items: center;
+  border-radius: 0px 0px 20px 20px;
+border: 1px solid #F9892B;
+}
+
+.form-input {
+  margin-bottom: 10px;
+}
+
+.form-input label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.form-input input[type="text"],
+.form-input input[type="password"],
+.form-input input[type="submit"] {
+  width: 100%;
+  padding: 8px;
+  box-sizing: border-box;
+}
+
+.form-input input[type="submit"] {
+  display: flex;
+width: 180px;
+height: 40px;
+padding: 14px 90px;
+justify-content: center;
+align-items: center;
+border-radius: 10px;
+background: var(--F9882B, #F9882B);
+}
+
+.image-container {
+  width: 100%; /* Задаем ширину контейнера */
+  position: fixed; /* Фиксируем позицию */
+  bottom: 0; /* Прижимаем к нижнему краю */
+  left: 0; /* Выравниваем по левому краю */
+  text-align: center; /* Центрируем изображение */
+}
+
+.image-container img {
+  max-width: 100%; /* Максимальная ширина изображения - 100% ширины контейнера */
+  height: auto; /* Высота изображения изменяется автоматически */
+}

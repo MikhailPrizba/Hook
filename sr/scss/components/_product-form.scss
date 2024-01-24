@@ -1,0 +1,314 @@
+.product-form {
+  display: none;
+  position: relative;
+  z-index: 5;
+  color: #333;
+  width: 600px;
+  margin: -415px auto;
+  border-radius: 20px;
+border: 1px solid var(--F9882B, #F9882B);
+background: var(--FFFFFF, #FFF);
+box-shadow: 0px 1px 4px 0px rgba(0, 0, 0, 0.25);
+overflow: hidden;
+/* max-height: 600px;
+overflow-y: auto; */
+
+}
+
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.5);
+  z-index: 4;
+}
+
+.product-form__close {
+  position: absolute;
+  right: 20px; /* Уменьшено значение отступа справа */
+  top: 10px; /* Добавлен отступ сверху */
+  font-size: 30px;
+  font-weight: bold;
+  cursor: pointer;
+  color: #888;
+}
+
+
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+  border-bottom: 1px solid var(--FAA055, #FAA055);
+  background: var(--FEF3EA, #FEF3EA);}
+
+.tab {
+  color: var(--0F0F0F, #0F0F0F);
+  text-align: center;
+  
+  /* Caption 1/bold */
+  font-family: Manrope;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+  padding: 18px 11px;
+  gap: 10px;
+
+
+}
+
+.close-tab {
+  margin-left: 5px;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.add-tab {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 24px;
+  /* border-radius: 8px; */
+  padding: 0 10px;
+}
+
+/* .form-content {
+  margin-bottom: 15px;
+} */
+
+.form-content label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+  font-family: Manrope;
+font-size: 16px;
+font-style: normal;
+font-weight: 400;
+line-height: normal; /* Добавляем жирный шрифт для меток */
+}
+
+.form-content input[type="text"],
+.form-content select,
+.form-content input[type="date"],
+.form-content input[type="number"] {
+  box-sizing: border-box;
+
+  width: 100%; /* Растягиваем поля ввода на всю ширину родителя */
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px; /* Устанавливаем размер шрифта */
+}
+
+
+.form-body .input-group {
+  margin-bottom: 15px;
+}
+
+.form-body{
+  padding: 34px 112px;
+  max-height: 450px; /* Пример фиксированной максимальной высоты */
+  overflow-y: auto; /* Активирует прокрутку, если содержимое превышает 600px */
+}
+
+.form-body label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+
+.form-actions {
+  display: flex;
+  justify-content: center;
+  border-top: 1px solid var(--F9882B, #F9882B);
+  background: var(--FFFFFF, #FFF);
+  padding: 24px 0px;
+  gap: 10px;
+}
+
+.form-actions button {
+  align-items: center;
+  padding: 10px 52px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.save {
+  background: var(--F9882B, #F9882B);
+  border: none;
+
+}
+
+.save:hover{
+  border: 1px solid var(--F9882B, #F9882B);
+  box-shadow: 0px 3px 4px 0px rgba(0, 0, 0, 0.12);   
+  }
+  
+  .save:active {
+    border: 1px solid var(--F9882B, #F9882B);
+    background: var(--FBB880, #FBB880);
+  }
+
+
+.cancel {
+  border: 1px solid #000;
+  background: transparent;
+
+  cursor: pointer;
+}
+
+.cancel:hover{
+  border: 1px solid var(--F9882B, #F9882B);
+  box-shadow: 0px 3px 4px 0px rgba(0, 0, 0, 0.12);
+    
+  }
+  
+  .cancel:active {
+    border: 1px solid var(--F9882B, #F9882B);
+    background: var(--FBB880, #FBB880);
+  }
+
+/* Стили для активной вкладки */
+.tab.active {
+  background: var(--FAA055, #FAA055); /* цвет фона для активной вкладки */
+  color: #0F0F0F; /* Белый цвет текста для контраста */
+  font-weight: bold; /* Жирное начертание текста */
+  position: relative; /* Позиционирование для возможного добавления декоративных элементов */
+}
+
+/* Наведение на вкладки */
+.tab:hover {
+  background-color: #FDDBBF; /* Светлее при наведении */
+  cursor: pointer;
+}
+
+.tab.active:hover {
+  background: var(--FAA055, #FAA055); /* Цвет активной вкладки остается неизменным при наведении */
+}
+
+/* Стили для модального окна */
+.confirmationModal {
+  z-index: 10;
+
+  display: none;
+  position: fixed;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.8);
+  /* display: flex; */
+  justify-content: center;
+  align-items: center;
+}
+
+/* Стили для контента модального окна */
+.confirmationModal__content {
+  position: relative;
+  background: white;
+  border-radius: 5px;
+  width: 600px;
+  border-radius: 20px;
+  border: 1px solid var(--F9882B, #F9882B);
+  background: var(--FFFFFF, #FFF);
+  overflow: hidden;
+}
+
+.confirmationModal__header {
+  padding: 20px 0;
+  color: #000;
+text-align: center;
+font-family: Manrope;
+font-size: 18px;
+font-style: normal;
+font-weight: 600;
+line-height: normal;
+background: var(--FAA055, #FAA055);
+}
+
+.confirmationModal__close {
+  position: absolute;
+  right: 20px; /* Уменьшено значение отступа справа */
+  top: 10px; /* Добавлен отступ сверху */
+  font-size: 30px;
+  font-weight: bold;
+  cursor: pointer;
+  color: #888; /* Изменен цвет крестика для лучшей видимости */
+}
+
+.confirmationModal__body {
+  font-family: Manrope;
+  font-style: normal;
+  text-align: center;
+  line-height: normal;
+
+}
+
+.confirmationModal__body h4 {
+
+font-size: 18px;
+font-weight: 500;
+}
+.confirmationModal__body p {
+font-size: 16px;
+font-weight: 400;
+}
+
+.confirmationModal__button {
+display: flex;
+justify-content: center;
+align-items: center;
+gap: 10px;
+
+padding-bottom: 40px; 
+}
+
+/* Дополнительные стили для кнопок в модальном окне */
+#confirmDelete,
+#cancelDelete {
+  padding: 10px 20px;
+  margin-top: 10px;
+  font-size: 16px;
+  cursor: pointer;
+  border: none;
+  border-radius: 5px;
+  transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+}
+
+
+#cancelDelete {
+  background-color: transparent;
+  border-radius: 10px;
+  border: 1px solid var(--0F0F0F, #0F0F0F);
+  color: var(--0F0F0F, #0F0F0F);
+}
+
+#confirmDelete {
+  border-radius: 10px;
+  background: #EB5E5E;
+    color: white;
+}
+/* При наведении добавлен эффект тени для кнопок */
+#cancelDelete:hover,
+#confirmDelete:hover {
+  background: var(--FAA055, #FAA055);
+  color: white;
+}
+
+#cancelDelete:active,
+#confirmDelete:active {
+  background: var(--FAA055, #FAA055);
+  color: white;
+  border-color: transparent; /* убираем границу при нажатии */
+}
+
+.save:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+
+

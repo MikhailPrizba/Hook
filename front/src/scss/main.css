@@ -123,11 +123,12 @@ section {
 
 .product-form {
   display: none;
-  position: relative;
+  position: fixed;
+  top: 10%;
+  right: 25%;
   z-index: 5;
   color: #333;
   width: 600px;
-  margin: -415px auto;
   border-radius: 20px;
   border: 1px solid var(--F9882B, #F9882B);
   background: var(--FFFFFF, #FFF);

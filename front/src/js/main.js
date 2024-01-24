@@ -30,7 +30,6 @@ function showSection(event, sectionId) {
 
 // --------------Header_____________________
 
-
 // Функция для отображения главной страницы
 function showMainPage() {
   document.querySelector('.wrap-authorization').style.display = 'none';
@@ -118,89 +117,219 @@ function fetchData() {
   fetch('/api/v1/storage/tobacco/')
     .then(response => response.json())
     .then(data => {
-      // Предполагаем, что 'data' - это массив объектов, как на вашем изображении
       updateTable(data);
     })
     .catch(error => {
       console.error('Error fetching data: ', error);
     });
 }
-
-// Функция для обновления таблицы данными
+function toggleEditDeleteButtons(id) {
+  const editDeleteButtons = document.getElementById(`edit-delete-${id}`);
+  editDeleteButtons.style.display = editDeleteButtons.style.display === 'none' ? 'block' : 'none';
+}
 function updateTable(data) {
   const tableBody = document.querySelector('.stock__table tbody');
-  tableBody.innerHTML = ''; // Очистите текущее содержимое tbody
-
-  // Перебираем каждый объект данных и создаем строку таблицы
+  tableBody.innerHTML = '';
   data.forEach((item, index) => {
-    const row = `
-      <tr>
-        <td>${index + 1}</td>
-        <td>${item.brand}</td>
-        <td>${item.supplier}</td>
-        <td>${item.taste}</td>
-        <td>${item.taste_group}</td>
-        <td>${item.purchase_date}</td>
-        <td>${item.best_before_date}</td>
-        <td>${item.price}</td>
-        <td>${item.weight}</td>
-        <td class="actions">
-        <div class="action-buttons">
-          <button class="options-button" onclick="toggleEditDeleteButtons(${item.id})">...</button>
-          <div class="edit-delete-buttons" id="edit-delete-${item.id}" style="display: none;">
-            <button class="edit-button" data-id="${item.id}" onclick="editItem(${item.id})">Редактировать</button>
-            <button class="delete-button" data-id="${item.id}" onclick="deleteItem(${item.id})">Удалить</button>
-          </div>
-        </div>
-      </td>
-      </tr>
-    `;
-    tableBody.innerHTML += row; // Добавьте строку в tbody таблицы
+    const row = `<tr data-id="${item.id}">
+    <td>${index + 1}</td>
+    <td>${item.brand}</td>
+    <td>${item.supplier}</td>
+    <td>${item.taste}</td>
+    <td>${item.taste_group}</td>
+    <td>${item.purchase_date}</td>
+    <td>${item.best_before_date}</td>
+    <td>${item.weight}</td>
+    <td>${item.price}</td>
+    <td class="actions"><div class="action-buttons"><button class="options-button" onclick="toggleEditDeleteButtons(${item.id})">...</button><div class="edit-delete-buttons" id="edit-delete-${item.id}" style="display: none;"><button class="edit-button" data-id="${item.id}">Редактировать</button><button class="delete-button" data-id="${item.id}">Удалить</button></div></div></td></tr>`;
+    tableBody.innerHTML += row;
   });
+  document.querySelector('.stock__box').style.display = data.length === 0 ? 'flex' : 'none';
+}
+document.addEventListener('DOMContentLoaded', () => {
+  fetchData();
+  document.querySelector('.stock__table').addEventListener('click', function(e) {
+    if (e.target.closest('.edit-button')) {
+      const id = e.target.closest('.edit-button').getAttribute('data-id');
+      editItem(id);
+    } else if (e.target.closest('.delete-button')) {
+      const id = e.target.closest('.delete-button').getAttribute('data-id');
+      deleteItem(id);
+    }
+  });
+});
 
 
-// Добавьте обработчики событий для кнопок "Редактировать" и "Удалить"
-document.addEventListener('click', function(e) {
-  if (e.target && e.target.className == 'edit-button') {
-    // Действие редактирования
-    const id = e.target.getAttribute('data-id');
-    editItem(id);
-  } else if (e.target && e.target.className == 'delete-button') {
-    // Действие удаления
-    const id = e.target.getAttribute('data-id');
+function editItem(id) {
+  console.log('Редактировать элемент с id:', id);
+}
+
+// Новая функция для начала редактирования
+function startEditing(id) {
+  const row = document.querySelector(`tr[data-id="${id}"]`);
+  const cells = row.querySelectorAll('td');
+
+  // Превращаем каждую ячейку в редактируемое поле, кроме первой и последней (индекс и кнопки действий)
+  for (let i = 1; i < cells.length - 1; i++) {
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.value = cells[i].innerText;
+    cells[i].innerText = '';
+    cells[i].appendChild(input);
+  }
+
+  // Заменяем кнопки на кнопку "Сохранить"
+  const saveButton = document.createElement('button');
+  saveButton.textContent = 'Сохранить';
+  saveButton.onclick = () => saveEdit(id);
+  cells[cells.length - 1].innerHTML = '';
+  cells[cells.length - 1].appendChild(saveButton);
+}
+
+// Функция для сохранения изменений
+function saveEdit(id) {
+  const row = document.querySelector(`tr[data-id="${id}"]`);
+  const inputs = row.querySelectorAll('input');
+  const updatedItem = {
+    brand: inputs[0].value, // Предположим, что это brand
+    supplier: inputs[1].value, // Предположим, что это supplier
+    taste: inputs[2].value,
+    taste_group: inputs[3].value,
+    purchase_date: inputs[4].value,
+    best_before_date: inputs[5].value,
+    weight: inputs[6].value,
+    price: inputs[7].value,
+    
+    // ... получить остальные значения
+  };
+
+  updateItemOnServer(id, updatedItem);
+}
+
+// Обновленная функция для отправки изменений на сервер
+function updateItemOnServer(id, updatedItem) {
+  const authToken = localStorage.getItem('authToken');
+  if (!authToken) {
+    console.error('Токен аутентификации не найден');
+    return;
+  }
+
+  const url = `/api/v1/storage/tobacco/${id}/`;
+  fetch(url, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${authToken}`
+    },
+    body: JSON.stringify(updatedItem)
+  })
+  .then(response => {
+    if (response.ok) {
+      console.log(`Обновлен элемент с id: ${id}`);
+      return response.json();
+    } else {
+      return response.json().then(error => {
+        throw new Error(`Ошибка при обновлении: ${error.message}`);
+      });
+    }
+  })
+  .then(updatedData => {
+    // Обновление данных в таблице
+    updateTableRow(id, updatedData);
+  })
+  .catch(error => {
+    console.error('Ошибка при обновлении элемента:', error);
+  });
+}
+
+// Обновленная функция для обновления строки таблицы
+function updateTableRow(id, updatedData) {
+  const row = document.querySelector(`tr[data-id="${id}"]`);
+  if (row) {
+    const cells = row.querySelectorAll('td');
+
+    // Обновляем текст в каждой ячейке, кроме первой и последней
+    cells[1].innerText = updatedData.brand; // Индекс 0, потому что мы пропустили первую ячейку
+    cells[2].innerText = updatedData.supplier;
+    cells[3].innerText = updatedData.taste;
+    cells[4].innerText = updatedData.taste_group;
+    cells[5].innerText = updatedData.purchase_date;
+    cells[6].innerText = updatedData.best_before_date;
+    cells[7].innerText = updatedData.weight;
+    cells[8].innerText = updatedData.price;
+    
+    // cells[8].innerText = updatedData.organization;
+
+
+    // ... обновить остальные ячейки
+
+    // Возвращаем кнопки "Редактировать" и "Удалить"
+    const editButton = document.createElement('button');
+    editButton.textContent = 'Редактировать';
+    editButton.onclick = () => startEditing(id);
+    const deleteButton = document.createElement('button');
+    deleteButton.textContent = 'Удалить';
+    deleteButton.onclick = () => deleteItem(id);
+    
+    cells[cells.length - 1].innerHTML = '';
+    cells[cells.length - 1].appendChild(editButton);
+    cells[cells.length - 1].appendChild(deleteButton);
+  }
+}
+
+// Добавим вызов startEditing в существующий обработчик событий
+document.querySelector('.stock__table').addEventListener('click', function(e) {
+  if (e.target.closest('.edit-button')) {
+    const id = e.target.closest('.edit-button').getAttribute('data-id');
+    startEditing(id); // Изменено на startEditing
+  } else if (e.target.closest('.delete-button')) {
+    const id = e.target.closest('.delete-button').getAttribute('data-id');
     deleteItem(id);
   }
 });
 
 
 
-function editItem(id) {
-  // Функция для редактирования элемента
-  // Здесь вы можете добавить логику для редактирования элемента
-  console.log('Редактировать элемент с id:', id);
-}
+// \---Удаление_____
 
 function deleteItem(id) {
-  // Функция для удаления элемента
-  // Здесь вы можете добавить логику для удаления элемента
-  console.log('Удалить элемент с id:', id);
-}
+  const authToken = localStorage.getItem('authToken'); // Или sessionStorage, в зависимости от того, где он хранится
+  if (!authToken) {
+    console.error('Токен аутентификации не найден');
+    return;
+  }
 
-  // Проверяем, пустой ли массив данных
-  if (data.length === 0) {
-    // Показываем сообщение о пустом складе
-    document.querySelector('.stock__box').style.display = 'flex';
-  } else {
-    // Скрываем сообщение о пустом складе
-    document.querySelector('.stock__box').style.display = 'none';
+  const url = `/api/v1/storage/tobacco/${id}/`;
+  fetch(url, {
+    method: 'DELETE',
+    headers: {
+      'Authorization': `Bearer ${authToken}`
+
+    }
+  })
+  .then(response => {
+    if (response.ok) {
+      console.log(`Удален элемент с id: ${id}`);
+      removeTableRow(id);
+    } else {
+      return response.json().then(error => {
+        throw new Error(`Ошибка при удалении: ${error.message}`);
+      });
+    }
+  })
+  .catch(error => {
+    console.error('Ошибка при удалении элемента:', error);
+  });
+}
+function removeTableRow(id) {
+  const row = document.querySelector(`tr[data-id="${id}"]`);
+  if (row) {
+    row.remove();
+    // Также вызываем обновление номеров после удаления строки
+    updateRowNumbers();
   }
 }
-
-// Вызовите функцию fetchData при загрузке страницы
-document.addEventListener('DOMContentLoaded', fetchData);
-
-// -----------------Склад_____________________
-
+// \---Удаление_____
 
 
 

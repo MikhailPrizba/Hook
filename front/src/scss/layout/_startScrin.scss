@@ -1,3 +1,12 @@
 .startScrin {
-  margin-left: 320px;
+  margin-left: 215px;
+}
+
+.startScrin img {
+  display: flex;
+  justify-content: center; /* Горизонтальное выравнивание */
+  align-items: center; /* Вертикальное выравнивание */
+  max-width: 960px;
+  min-height: 830px;
+  margin-top: -100px;
 }

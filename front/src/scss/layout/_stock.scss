@@ -99,9 +99,11 @@ line-height: normal;
   }
 
 .stock__table {
+  width: 100%;
+
   border-radius: 20px 20px 0px 0px;
 
-  width: 100%;
+  // width: 100%;
   border-collapse: collapse;
 }
 .stock__table thead tr:first-child th:first-child {
@@ -114,7 +116,7 @@ line-height: normal;
 
 
 .stock__thead th{
-  padding: 20px;
+  padding: 20px 15px;
 
   color: #1D1D1D;
   text-align: center;
@@ -131,12 +133,19 @@ line-height: normal;
 
 .stock__table td {
   padding: 10px;
-  border-bottom: 1px solid #ddd; /* Граница между строками */
+  border-bottom: 1px solid #ddd;
+  
+  color: #000;
+
+  text-align: center;
+  font-family: Manrope;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
 }
 
-td {
-  text-align: center;
-}
+
 
 .stock__box{
   margin-top: 150px;
@@ -169,9 +178,13 @@ text-align: center;
 
 .options-button {
   background-color: transparent;
-  border: 1px solid salmon;
+  border: none;
 }
 
+.options-button:hover{
+  background-color: #F9882B;
+  box-shadow: 0px 3px 4px 0px rgba(0, 0, 0, 0.12);
+}
 .edit-input {
   width: 100%;
   padding: 5px;
@@ -189,3 +202,76 @@ text-align: center;
   padding: 5px;
   box-sizing: border-box;
 }
+
+.actions{
+  position: relative;
+}
+
+.edit-delete-buttons{
+  position: absolute;
+  top: 30px;
+  right: 30px;
+
+padding: 5px 15px;
+flex-direction: column;
+justify-content: center;
+align-items: flex-start;
+gap: 6px;
+
+border-radius: 10px;
+border: 1px solid var(--FAA055, #FAA055);
+background: var(--FFFFFF, #FFF);
+
+.edit-button, .delete-button{
+padding: 6px 12px;
+align-items: center;
+width: 100%;
+
+color: var(--190E04, #190E04);
+text-align: center;
+font-size: 14px;
+font-style: normal;
+font-weight: 400;
+line-height: normal;
+  
+}
+
+}
+
+.highlighted {
+  border-radius: 0px 20px 20px 0px;
+}
+
+.highlighted td {
+  // padding: 20px;
+  background: var(--FEF3EA, #FEF3EA);
+}
+
+.highlighted td:last-child {
+  background-color: transparent; 
+}
+
+
+.reset-default-styles {
+  border: none;
+  background: transparent;
+  text-align: center;
+  width: 90%;
+  font-size: 12px;
+
+}
+
+
+// .edit-delete-buttons {
+//   position: absolute;
+//   top: 70px;
+//   right: 40px;
+//   padding: 5px 15px;
+//   /* flex-direction: column; */
+//   justify-content: center;
+//   /* align-items: flex-start; */
+//   gap: 6px;
+//   border-radius: 10px;
+//   /* border: 1px solid var(--FAA055, #FAA055); */
+//   /* background: var(--FFFFFF, #FFF); */
+// }

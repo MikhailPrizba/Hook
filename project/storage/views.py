@@ -25,6 +25,7 @@ class TobaccoViewSet(DeleteViewMixin, viewsets.ModelViewSet):
 
 
 class ReduceTobaccoWeightView(APIView):
+    serializer_class = TobaccoSerializer
     def post(self, request, format=None):
         try:
             weight_to_reduce = [12, 6, 2]

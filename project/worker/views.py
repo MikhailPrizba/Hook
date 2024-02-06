@@ -12,4 +12,4 @@ class WorkerViewSet(DeleteViewMixin, viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
 
     def perform_create(self, serializer):
-        Worker.objects.create_instance(**serializer.data)
+        Worker.objects.create_instance(**serializer.validated_data)

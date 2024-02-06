@@ -19,11 +19,8 @@ class WorkerManager(ModelManagerMixin):
         Returns:
             models.Model: Created instance.
         """
-        print(kwargs)
         user = User.objects.create_user(**kwargs.get("user"))
-
         kwargs["user"] = user
-        kwargs["organization"] = Organization.objects.get(id=kwargs.get("organization"))
 
         instance = super().create_instance(**kwargs)
         return instance

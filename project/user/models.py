@@ -12,6 +12,7 @@ class User(AbstractUser):
         OWNER = "OWNER"
         ADMIN = "ADMIN"
         HOOKAH = "HOOKAH"
+
     user_role = models.TextField(
         choices=UserRoleChoices.choices, default=UserRoleChoices.OWNER
     )

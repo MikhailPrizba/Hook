@@ -1,0 +1,25 @@
+// Определение переменных для упрощения последующего использования
+$font-family-default: 'Raleway', sans-serif;
+$color-text: #FBFBFB;
+$color-link: #FFF;
+
+$tg-blue:#01A0FF;
+$gradient: rgba(79, 41, 177, 1);
+$color-bg: #091724;
+
+
+
+@use "sass:math";
+$containerWidth: 1280;
+$containerPadding:200;
+$containerSidePadding: math.div($containerPadding, 2);
+$breakpoint992: 991.98+px;
+
+// Burger Menu 
+$burgerBreakpoint: $breakpoint992;
+$burgerActiveColor: 'white';
+
+
+// Адаптив
+$tablet-width: 900px;
+$mobile-width: 760px;

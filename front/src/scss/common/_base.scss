@@ -1,0 +1,48 @@
+html {
+  font-size: 10px;
+}
+body {
+  font-family: 'Manrope', sans-serif;
+  // height: 100%;
+}
+
+
+.locked {
+  overflow: hidden; /* Блокирует прокрутку на body */
+  height: 100%; /* Фиксирует высоту body */
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  list-style: none;
+  text-decoration: none;
+}
+
+
+// .page-container {
+//   display: flex;
+// }
+
+
+section {
+  display: none;
+  padding: 20px;
+}
+
+.active-section {
+  display: block;
+  // width: 100%;
+}
+
+.content {
+  margin-left: 80px; /* Должно соответствовать ширине хедера */
+  width: calc(100% - 80px); /* Вычитаем ширину хедера */
+  height: 100vh;
+  overflow: auto;
+}
+
+.page-container {
+  display: none;
+}

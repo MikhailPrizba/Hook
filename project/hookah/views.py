@@ -5,7 +5,7 @@ from core.views import DeleteViewMixin
 
 
 class OrganiztionViewSet(DeleteViewMixin, viewsets.ModelViewSet):
-    queryset = Organization.objects.all()
+    queryset = Organization.objects.filter(is_active=True)
     serializer_class = OrganizationSerializer
 
     def perform_create(self, serializer):

@@ -1,5 +1,5 @@
 #!/bin/sh
-
+chmod a+x static/
 python manage.py collectstatic
 python manage.py makemigrations
 python manage.py migrate

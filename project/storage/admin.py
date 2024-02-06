@@ -5,7 +5,16 @@ from .models import Tobacco
 
 
 class TobaccoAdmin(admin.ModelAdmin):
-    list_display = ("brand", "taste","taste_group", "supplier", "purchase_date", "best_before_date", "price", "weight")
+    list_display = (
+        "brand",
+        "taste",
+        "taste_group",
+        "supplier",
+        "purchase_date",
+        "best_before_date",
+        "price",
+        "weight",
+    )
     list_filter = ["organization"]
     search_fields = ("brand", "taste", "supplier")
 

@@ -1,5 +1,5 @@
 from rest_framework import permissions
-
+from user.models import User
 
 class IsOwner(permissions.BasePermission):
     """
@@ -12,4 +12,5 @@ class IsOwner(permissions.BasePermission):
         # so we'll always allow GET, HEAD or OPTIONS requests.
 
         # Instance must have an attribute named `owner`.
-        return obj.owner == request.user.owner or request.user.is_staff
+
+        return obj.owner.user == request.user or request.user.is_staff

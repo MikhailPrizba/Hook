@@ -38,7 +38,9 @@ schema_view = get_schema_view(
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("api/v1/api-auth/", include("rest_framework.urls", namespace="rest_framework")),
+    path(
+        "api/v1/api-auth/", include("rest_framework.urls", namespace="rest_framework")
+    ),
     path("api/v1/owner/", include("owner.urls")),
     path("api/v1/worker/", include("worker.urls")),
     path("api/v1/hookah/", include("hookah.urls")),
@@ -56,5 +58,9 @@ urlpatterns = [
         schema_view.with_ui("swagger", cache_timeout=0),
         name="schema-swagger-ui",
     ),
-    path("api/v1/redoc/", schema_view.with_ui("redoc", cache_timeout=0), name="schema-redoc"),
+    path(
+        "api/v1/redoc/",
+        schema_view.with_ui("redoc", cache_timeout=0),
+        name="schema-redoc",
+    ),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

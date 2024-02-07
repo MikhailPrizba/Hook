@@ -27,3 +27,15 @@ function bindModal(trigger, modal, close) {
 // ВТОРОЙ аргумент - класс самого модального окна.
 // ТРЕТИЙ аргумент - класс кнопки, при клике на которую будет закрываться модальное окно.
 bindModal('.modal__btn', '.modal__wrapper', '.modal__close')
+
+
+// {"data":{"
+//   supplier":"дло",
+//   "brand":"длод",
+//   "taste":"доджо",
+//   "purchase_date":"2024-01-26T00:00:00.000Z","best_before_date":"2024-01-27T00:00:00.000Z",
+//   "weight":"76",
+//   "price":"76",
+//   "taste_group":"berry"
+// }
+// }

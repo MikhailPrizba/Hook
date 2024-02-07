@@ -6,7 +6,7 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 # Create your models here.
 
 
-class Tobacco(MainInformationMixin,models.Model):
+class Tobacco(MainInformationMixin, models.Model):
     organization = models.ForeignKey(Organization, on_delete=models.CASCADE)
     brand = models.CharField(max_length=255)
     supplier = models.CharField(max_length=255)

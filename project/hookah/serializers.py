@@ -3,7 +3,7 @@ from hookah.models import Organization
 
 
 class OrganizationSerializer(serializers.ModelSerializer):
-    owner = serializers.HiddenField(default=None)
+    owner = serializers.HiddenField(default=serializers.CurrentUserDefault())
 
     class Meta:
         model = Organization

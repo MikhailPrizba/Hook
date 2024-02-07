@@ -1,5 +1,7 @@
 from rest_framework import viewsets, generics
 from .serializers import TobaccoSerializer
+from rest_framework import viewsets, generics
+from .serializers import TobaccoSerializer
 from .models import Tobacco
 from core.views import DeleteViewMixin
 from rest_framework.response import Response
@@ -8,10 +10,11 @@ from rest_framework.views import APIView
 from django.views.generic.list import ListView
 
 
-
 class TobaccoViewSet(DeleteViewMixin, viewsets.ModelViewSet):
     queryset = Tobacco.objects.filter(is_active=True)
     serializer_class = TobaccoSerializer
+    filter_backends = [TobaccoFilter]
+    permission_classes = [IsAuthenticated, IsNotHookah]
 
     def create(self, request, *args, **kwargs):
         # If the data is a list, create objects in bulk
@@ -23,7 +26,9 @@ class TobaccoViewSet(DeleteViewMixin, viewsets.ModelViewSet):
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
         headers = self.get_success_headers(serializer.data)
-        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+        return Response(
+            serializer.data, status=status.HTTP_201_CREATED, headers=headers
+        )
 
 
 class ReduceTobaccoWeightView(generics.GenericAPIView):
@@ -34,13 +39,16 @@ class ReduceTobaccoWeightView(generics.GenericAPIView):
             data = request.data
 
             for index, tobacco in enumerate(data):
-                tobacco_taste = tobacco['taste']
-                tobacco_taste_group = tobacco['taste_group']
+                tobacco_taste = tobacco["taste"]
+                tobacco_taste_group = tobacco["taste_group"]
                 weight_to_reduce_current = weight_to_reduce[index]
 
                 try:
-                    tobacco_obj = Tobacco.objects.get(taste=tobacco_taste, taste_group=tobacco_taste_group,
-                                                      weight__lt=weight_to_reduce_current)
+                    tobacco_obj = Tobacco.objects.get(
+                        taste=tobacco_taste,
+                        taste_group=tobacco_taste_group,
+                        weight__lt=weight_to_reduce_current,
+                    )
                 except Tobacco.DoesNotExist:
                     continue
 
@@ -51,7 +59,7 @@ class ReduceTobaccoWeightView(generics.GenericAPIView):
                     tobacco_obj.save()
 
             for index, item in enumerate(data):
-                tobacco_id = item['id']
+                tobacco_id = item["id"]
                 weight_to_reduce_current = weight_to_reduce[index]
 
                 tobacco = Tobacco.objects.get(id=tobacco_id)
@@ -59,9 +67,16 @@ class ReduceTobaccoWeightView(generics.GenericAPIView):
                     tobacco.weight -= weight_to_reduce_current
                     tobacco.save()
                 else:
-                    return Response({'error': f'Not enough weight available for tobacco {tobacco_id}'},
-                                    status=status.HTTP_400_BAD_REQUEST)
+                    return Response(
+                        {
+                            "error": f"Not enough weight available for tobacco {tobacco_id}"
+                        },
+                        status=status.HTTP_400_BAD_REQUEST,
+                    )
 
-            return Response({'message': 'Tobacco weights reduced successfully'}, status=status.HTTP_200_OK)
+            return Response(
+                {"message": "Tobacco weights reduced successfully"},
+                status=status.HTTP_200_OK,
+            )
         except Exception as e:
-            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)

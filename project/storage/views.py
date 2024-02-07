@@ -1,8 +1,9 @@
 from rest_framework import viewsets, generics
 from .serializers import TobaccoSerializer
+from .models import Tobacco
+from core.views import DeleteViewMixin
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework.views import APIView
 from .filters import TobaccoFilter
 from .permissions import IsNotHookah
 from rest_framework.permissions import IsAuthenticated
@@ -31,6 +32,7 @@ class TobaccoViewSet(DeleteViewMixin, viewsets.ModelViewSet):
 
 class ReduceTobaccoWeightView(generics.GenericAPIView):
     serializer_class = TobaccoSerializer
+
     def post(self, request):
         try:
             weight_to_reduce = [12, 6, 2]

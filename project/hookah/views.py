@@ -10,8 +10,9 @@ from rest_framework.permissions import IsAuthenticated
 class OrganiztionViewSet(DeleteViewMixin, viewsets.ModelViewSet):
     queryset = Organization.objects.filter(is_active=True)
     serializer_class = OrganizationSerializer
+    permission_classes = [IsAuthenticated,IsOwner]
     filter_backends = [OwnerFilter]
-    permission_classes = [IsOwner, IsAuthenticated]
+
 
     def perform_create(self, serializer):
         serializer.validated_data["owner"] = self.request.user.owner

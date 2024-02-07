@@ -9,4 +9,4 @@ class OwnerFilter(BaseFilterBackend):
     def filter_queryset(self, request, queryset, view):
         if request.user.is_staff:
             return queryset
-        return queryset.filter(owner=request.user.owner)
+        return queryset.filter(owner__user=request.user)

@@ -15,5 +15,4 @@ class IsOwner(permissions.BasePermission):
         # so we'll always allow GET, HEAD or OPTIONS requests.
 
         # Instance must have an attribute named `owner`.
-        print(bool(obj.owner.user == request.user or request.user.is_staff))
         return obj.owner.user == request.user or request.user.is_staff

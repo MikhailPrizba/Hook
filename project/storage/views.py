@@ -7,6 +7,9 @@ from rest_framework import status
 from .filters import TobaccoFilter
 from .permissions import IsNotHookah
 from rest_framework.permissions import IsAuthenticated
+from taste_generator.models import Generator
+from rest_framework.decorators import action
+from rest_framework.response import Response
 
 
 class TobaccoViewSet(DeleteViewMixin, viewsets.ModelViewSet):
@@ -28,6 +31,31 @@ class TobaccoViewSet(DeleteViewMixin, viewsets.ModelViewSet):
         return Response(
             serializer.data, status=status.HTTP_201_CREATED, headers=headers
         )
+    @action(detail=False)
+    def get_random_recipes(self, request, *args, **kwargs):
+
+        queryset = self.filter_queryset(self.get_queryset())
+        filtered_data = []
+        random_records = Generator.objects.filter(is_active=True).order_by("?")[:3]
+        for random_record in random_records:
+            data = []
+            min_counts = {"main": 12, "second": 6, "tint": 2}
+
+            for combination in ["main", "second", "tint"]:
+                queryset_data = (
+                    queryset.filter(
+                        taste_group=getattr(random_record, combination),
+                        weight__gt=min_counts.get(combination, 0),
+                    )
+                    .order_by("?")
+                    .values()
+                    .first()
+                )
+                if queryset_data:
+                    data.append(queryset_data)
+            filtered_data.append(data)
+
+        return Response(filtered_data)
 
 
 class ReduceTobaccoWeightView(generics.GenericAPIView):
@@ -80,3 +108,4 @@ class ReduceTobaccoWeightView(generics.GenericAPIView):
             )
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+

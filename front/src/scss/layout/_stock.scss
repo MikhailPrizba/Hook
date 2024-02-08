@@ -6,6 +6,8 @@
   border-bottom: 0.6px solid #F9892B;
 
 }
+
+
 .stock__header-search {
   display: flex;
   align-items: center;
@@ -40,7 +42,7 @@
   color: #000000; /* Цвет текста */
   width: 300px;
   
-  font-family: Manrope;
+  // font-family: Manrope;
   font-style: normal;
   font-weight: 400;
   line-height: normal;
@@ -177,6 +179,7 @@ text-align: center;
 }
 
 .options-button {
+  border-radius: 40%;
   background-color: transparent;
   border: none;
 }
@@ -207,12 +210,11 @@ text-align: center;
   position: relative;
 }
 
-.edit-delete-buttons{
+.edit-stock-delete-buttons{
   position: absolute;
   top: 30px;
   right: 30px;
 
-padding: 5px 15px;
 flex-direction: column;
 justify-content: center;
 align-items: flex-start;
@@ -222,7 +224,7 @@ border-radius: 10px;
 border: 1px solid var(--FAA055, #FAA055);
 background: var(--FFFFFF, #FFF);
 
-.edit-button, .delete-button{
+.stock-edit-button, .stock-delete-button{
 padding: 6px 12px;
 align-items: center;
 width: 100%;
@@ -262,16 +264,81 @@ line-height: normal;
 }
 
 
-// .edit-delete-buttons {
-//   position: absolute;
-//   top: 70px;
-//   right: 40px;
-//   padding: 5px 15px;
-//   /* flex-direction: column; */
-//   justify-content: center;
-//   /* align-items: flex-start; */
-//   gap: 6px;
-//   border-radius: 10px;
-//   /* border: 1px solid var(--FAA055, #FAA055); */
-//   /* background: var(--FFFFFF, #FFF); */
-// }
+.edit-save-cancel-buttons {
+  position: absolute;
+  top: 70px;
+  right: 40px;
+  // padding: 5px 15px;
+  flex-direction: row; 
+  justify-content: center;
+  align-items: center; 
+  gap: 6px;
+  border-radius: 10px;
+  border: none;
+  background: transparent;
+}
+
+
+.stock-edit-button, 
+.stock-delete-button{
+  display: flex;
+  // justify-content: center;
+  align-items: center;
+  border: none;
+  background: transparent;
+  gap: 6px;
+  // padding: 10px 15px;
+  border-radius: 10px;
+  color: var(--0F0F0F, #0F0F0F);
+  text-align: center;
+  font-family: Manrope;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+
+}
+
+.stock-edit-button:hover,
+.stock-delete-button:hover {
+  border-radius: 8px;
+background: var(--FEF3EA, #FEF3EA);
+}
+
+.stock-edit-button:active {
+  border-radius: 8px;
+background: var(--FDCFAA, #FDCFAA);
+}
+
+.stock-delete-button{
+
+}
+
+.stock-save-button {
+  border: none;
+  padding: 4px 6px;
+  border-radius: 5px;
+background: #BFFAA4;
+  /* Caption 2/regular */
+  font-family: Manrope;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 140%; /* 16.8px */
+  letter-spacing: -0.12px;
+}
+
+.stock-cancel-button {
+  border: none;
+  border-radius: 5px;
+  background: #FD9F9F;
+  padding: 4px 6px;
+
+  /* Caption 2/regular */
+  font-family: Manrope;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 140%; /* 16.8px */
+  letter-spacing: -0.12px;
+}

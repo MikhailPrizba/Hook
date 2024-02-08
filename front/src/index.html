@@ -19,7 +19,9 @@
     </button>   
      <div class="navigation">
       <div class="logo">
-        <img class="logo_img" src="./assets/icons/logo.svg" alt="logo">
+        <a href="#startScrin" onclick="showSection(event, 'startScrin')">
+          <img class="logo_img" src="./assets/icons/logo.svg" alt="logo">
+        </a>
   </div>
       <nav>
         <ul class="menu">
@@ -43,7 +45,7 @@
       <section id="stock" class="stock">
         <div class="stock__header">
         <div class="stock__header-search">
-          <form action="" method="get" class="search-form">
+          <form action="" method="get" class="stock__search-form">
             <button type="submit">
               <i class="ri-search-line"></i>
             </button>
@@ -54,7 +56,7 @@
           <button class="stock__btn stock__btn-add button-accent"> <i class="ri-add-fill"></i><span>Добавить закупку</span></button>
           <button class="stock__btn stock__btn-history button-clear"><i class="ri-history-fill"></i><span>История закупок</span></button>
         </div>
-      </div>
+        </div>
       <div class="stok__main">
 
         <table class="stock__table">
@@ -88,7 +90,85 @@
         </div>
       </div>
       </section>
-      <section id="staffAdministration" class="staffAdministration">Администрирование персонала</section>
+      <section id="staffAdministration" class="staffAdministration">
+        <div class="stock__header">
+          <div class="stock__header-search">
+            <form action="" method="get" class="administration__search-form">
+              <button type="submit">
+                <i class="ri-search-line"></i>
+              </button>
+              <input type="search" name="query" placeholder="Поиск">
+            </form>
+          </div>
+          <div class="stock__header-buttens">
+            <button class="stock__btn staffAdministration__btn-add button-accent"> <i class="ri-add-fill"></i><span>Добавить пользователя</span></button>
+          </div>
+        </div> 
+        <div class="stok__main">
+
+          <table class="stock__table">
+            <thead class="stock__thead">
+              <tr>
+                <th>Имя пользователя</th>
+                <th>Фамилия</th>
+                <th>Почта</th>
+                <th>Логин</th>
+                <th>Роль</th>
+                <th>...</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- <tr>
+            
+              </tr> -->
+            </tbody>
+          </table>
+          <div class="form-style user-form" id="userForm">
+            <div class="form-title">
+              <h2>Добавление пользователя</h2>
+            </div>
+              <span class="user-form__close">&times;</span>
+              <div class="form-body user-form__body" id="userFormBody">
+                <div class="form-content user-form__content">
+                  <div class="input-group">
+                      <label for="name">Имя</label>
+                      <input type="text" id="name" name="name" placeholder="Введите имя">
+                  </div>
+                  <div class="input-group">
+                      <label for="surname">Фамилия</label>
+                      <input type="text" id="surname" name="surname" placeholder="Введите фамилию пользователя">
+                  </div>
+                  <div class="input-group">
+                      <label for="email">Почта</label>
+                      <input type="email" id="email" name="email" placeholder="Введите почту пользователя">
+                  </div>
+                  <!-- <div class="input-group">
+                      <label for="login">Логин</label>
+                      <input type="text" id="login" name="login" placeholder="Введите логин">
+                  </div> -->
+                  <!-- <div class="input-group">
+                      <label for="password">Пароль</label>
+                      <input type="text" id="password" name="password" placeholder="Введите пароль">
+                  </div> -->
+                  <div class="dinput-group">
+                    <label for="role-select">Роль:</label>
+                    <select id="role-select" name="role">
+                      <option value="">Выберите роль</option>
+                      <option value="admin">Администратор</option>
+                      <option value="cleaner">Кальянщик</option>
+                    </select>
+                  </div>
+                </div>
+
+              </div>
+              <div class="form-actions">
+                <button type="submit" class="form-actions__save-btn user-form__save-btn">Сохранить</button>
+              </div>
+            </div>
+        </div>
+        
+
+        </section>
       <section id="recipeMenu" class="recipeMenu">Меню</section>
     </main>
   </div> 
@@ -121,23 +201,33 @@
       <div class="image-container">
         <div class="image__wave" id="wave1"></div>
       </div> 
+      <div id="error-message" style=" 
+      font-size: 15px;
+      font-weight: bold;
+      color: red;
+      position: fixed;
+      top: 40%;
+      right: auto;
+  "
+    ></div>
     </div> 
+
     
 
 
-    <div class="product-form" id="productForm">
+    <div class="form-style product-form" id="productForm">
       <div class="tabs" id="tabs">
         <button type="button" class="add-tab">+</button>
       </div>
       <span class="product-form__close">&times;</span>
   
-      <div class="form-body" id="formBody">
-    
+      <div class="form-body product-form__body" id="productFormBody">
+        
       </div>
       
       <div class="form-actions">
-        <button type="button" class="save" >Сохранить</button>
-        <button type="button" class="cancel">Отменить</button>
+        <button type="button" class="form-actions__save-btn product-form__save-btn" >Сохранить</button>
+        <button type="button" class="form-actions__cancel-btn product-form__cancel-btn">Отменить</button>
       </div>
     </div>
     

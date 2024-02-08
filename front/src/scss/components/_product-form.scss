@@ -1,4 +1,10 @@
-.product-form {
+// .form-style
+
+
+// .user-form  Форма персонала
+// .product-form Форма внесения закупок
+
+.form-style {
   display: none;
   position: fixed;
   top: 10%;
@@ -94,7 +100,8 @@ line-height: normal; /* Добавляем жирный шрифт для мет
 .form-content input[type="text"],
 .form-content select,
 .form-content input[type="date"],
-.form-content input[type="number"] {
+.form-content input[type="number"],
+.form-content input[type="email"]{
   box-sizing: border-box;
 
   width: 100%; /* Растягиваем поля ввода на всю ширину родителя */
@@ -137,37 +144,43 @@ line-height: normal; /* Добавляем жирный шрифт для мет
   cursor: pointer;
 }
 
-.save {
+.form-actions__save-btn {
   background: var(--F9882B, #F9882B);
   border: none;
 
 }
 
-.save:hover{
+.form-actions__save-btn:hover{
   border: 1px solid var(--F9882B, #F9882B);
   box-shadow: 0px 3px 4px 0px rgba(0, 0, 0, 0.12);   
   }
   
-  .save:active {
+  .form-actions__save-btn:active {
     border: 1px solid var(--F9882B, #F9882B);
     background: var(--FBB880, #FBB880);
   }
 
 
-.cancel {
+  .product-form__save-btn:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+  }
+
+
+.form-actions__cancel-btn {
   border: 1px solid #000;
   background: transparent;
 
   cursor: pointer;
 }
 
-.cancel:hover{
+.form-actions__cancel-btn:hover{
   border: 1px solid var(--F9882B, #F9882B);
   box-shadow: 0px 3px 4px 0px rgba(0, 0, 0, 0.12);
     
   }
   
-  .cancel:active {
+  .form-actions__cancel-btn:active {
     border: 1px solid var(--F9882B, #F9882B);
     background: var(--FBB880, #FBB880);
   }
@@ -222,7 +235,7 @@ line-height: normal; /* Добавляем жирный шрифт для мет
   padding: 20px 0;
   color: #000;
 text-align: center;
-font-family: Manrope;
+// font-family: Manrope;
 font-size: 18px;
 font-style: normal;
 font-weight: 600;
@@ -306,10 +319,7 @@ padding-bottom: 40px;
   border-color: transparent; /* убираем границу при нажатии */
 }
 
-.save:disabled {
-  background: #ccc;
-  cursor: not-allowed;
-}
+
 
 
 

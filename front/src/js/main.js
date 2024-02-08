@@ -1,8 +1,6 @@
 
 
 
-
-
 // --------------Header_____________________
 
 function toggleMenu() {
@@ -86,11 +84,15 @@ document.addEventListener('DOMContentLoaded', (event) => {
           showMainPage();
         } else {
           console.error('Ошибка аутентификации', data);
+          errorMessageElement.textContent = 'Ошибка аутентификации';
         }
       })
       .catch(error => {
         console.error('Ошибка сети', error);
+        const errorMessageElement = document.getElementById('error-message');
+        errorMessageElement.textContent = 'Неверный логин или пороль';
       });
+      
     });
   } else {
     console.error('Форма входа не найдена');
@@ -105,6 +107,18 @@ document.addEventListener('DOMContentLoaded', (event) => {
   }
 });
 
+// Функция для выхода из системы
+function logout() {
+  localStorage.removeItem('authToken');
+  showLoginPage();
+  clearLoginFormFields(); // Вызываем функцию для очистки полей ввода
+}
+
+// Функция для очистки полей ввода формы
+function clearLoginFormFields() {
+  document.getElementById('login').value = '';
+  document.getElementById('password').value = '';
+}
 
 // -----------------Выход_____________________
 
@@ -118,7 +132,7 @@ function fetchData() {
     .then(data => {
       updateTable(data);
 
-      // Предполагаем, что `data` является массивом объектов, как в вашем примере
+      // Предполагаем, что `data` является массивом объектов
       data.forEach(item => {
         if(item.organization) { // Проверяем, существует ли свойство organization в каждом объекте
           organization = item.organization; // Сохраняем значение organization из объекта
@@ -181,9 +195,11 @@ function updateTable(data) {
       <td class="actions">
         <div class="action-buttons">
           <button class="options-button" onclick="toggleEditDeleteButtons(${item.id})">...</button>
-          <div class="edit-delete-buttons" id="edit-delete-${item.id}" style="display: none;">
-            <button class="edit-button" data-id="${item.id}">Редактировать</button>
-            <button class="delete-button" data-id="${item.id}">Удалить</button>
+          <div class="edit-stock-delete-buttons" id="edit-delete-${item.id}" style="display: none;">
+            <button class="stock-edit-button" data-id="${item.id}"> <i class="ri-edit-line"></i> <span>Редактировать</span>
+            </button>
+            <button class="stock-delete-button" data-id="${item.id}"><i class="ri-delete-bin-6-line"></i><span>Удалить</span>
+            </button>
           </div>
         </div>
       </td>
@@ -198,11 +214,11 @@ function updateTable(data) {
 document.addEventListener('DOMContentLoaded', () => {
   fetchData();
   document.querySelector('.stock__table').addEventListener('click', function(e) {
-    if (e.target.closest('.edit-button')) {
-      const id = e.target.closest('.edit-button').getAttribute('data-id');
+    if (e.target.closest('.stock-edit-button')) {
+      const id = e.target.closest('.stock-edit-button').getAttribute('data-id');
       editItem(id);
-    } else if (e.target.closest('.delete-button')) {
-      const id = e.target.closest('.delete-button').getAttribute('data-id');
+    } else if (e.target.closest('.stock-delete-button')) {
+      const id = e.target.closest('.stock-delete-button').getAttribute('data-id');
       deleteItem(id);
     }
   });
@@ -233,21 +249,21 @@ function startEditing(id) {
     cells[i].appendChild(input);
   }
 
-  // Добавляем кнопку "Сохранить"
-  const saveButton = document.createElement('button');
-  saveButton.textContent = 'Сохранить';
-  saveButton.onclick = () => saveEdit(id);
+  const productFormSaveBtn = document.createElement('button');
+  productFormSaveBtn.textContent = 'Сохранить';
+  productFormSaveBtn.classList.add('stock-save-button');
+  productFormSaveBtn.onclick = () => saveEdit(id);
 
-  // Добавляем кнопку "Отменить"
   const cancelButton = document.createElement('button');
   cancelButton.textContent = 'Отменить';
+  cancelButton.classList.add('stock-save-cancel-button');
   cancelButton.onclick = () => cancelEdit(id);
 
-  // Получаем контейнер для кнопок редактирования и удаления
   const buttonsContainer = document.getElementById(`edit-delete-${id}`);
   if (buttonsContainer) {
-    buttonsContainer.innerHTML = ''; // Очищаем контейнер перед добавлением новых кнопок
-    buttonsContainer.appendChild(saveButton);
+    buttonsContainer.innerHTML = '';
+    buttonsContainer.classList.add('edit-save-cancel-buttons');
+    buttonsContainer.appendChild(productFormSaveBtn);
     buttonsContainer.appendChild(cancelButton);
   } else {
     console.error('Элемент для редактирования не найден:', `edit-delete-${id}`);
@@ -356,9 +372,10 @@ function updateTableRow(id, updatedData) {
     actionCell.innerHTML = `
       <div class="action-buttons">
         <button class="options-button" onclick="toggleEditDeleteButtons(${id})">...</button>
-        <div class="edit-delete-buttons" id="edit-delete-${id}" style="display: none;">
-          <button class="edit-button" onclick="startEditing(${id})">Редактировать</button>
-          <button class="delete-button" onclick="deleteItem(${id})">Удалить</button>
+        <div class="edit-stock-delete-buttons" id="edit-delete-${id}" style="display: none;">
+          <button class="stock-edit-button" onclick="startEditing(${id})"><i class="ri-edit-line"></i> <span>Редактировать</span>
+          </button>
+          <button class="stock-delete-button" onclick="deleteItem(${id})"><i class="ri-delete-bin-6-line"></i><span>Удалить</span></button>
         </div>
       </div>
     `;
@@ -381,9 +398,9 @@ function cancelEdit(id) {
   actionCell.innerHTML = `
     <div class="action-buttons">
       <button class="options-button" onclick="toggleEditDeleteButtons(${id})">...</button>
-      <div class="edit-delete-buttons" id="edit-delete-${id}" style="display: none;">
-        <button class="edit-button" onclick="startEditing(${id})">Редактировать</button>
-        <button class="delete-button" onclick="deleteItem(${id})">Удалить</button>
+      <div class="edit-stock-delete-buttons" id="edit-delete-${id}" style="display: none;">
+        <button class="stock-edit-button" onclick="startEditing(${id})"><i class="ri-edit-line"></i> <span>Редактировать</span></button>
+        <button class="stock-delete-button" onclick="deleteItem(${id})"> <i class="ri-delete-bin-6-line"></i><span>Удалить</span></button>
       </div>
     </div>
   `;
@@ -391,11 +408,11 @@ function cancelEdit(id) {
 
 // Добавим вызов startEditing в существующий обработчик событий
 document.querySelector('.stock__table').addEventListener('click', function(e) {
-  if (e.target.closest('.edit-button')) {
-    const id = e.target.closest('.edit-button').getAttribute('data-id');
+  if (e.target.closest('.stock-edit-button')) {
+    const id = e.target.closest('.stock-edit-button').getAttribute('data-id');
     startEditing(id); // Изменено на startEditing
-  } else if (e.target.closest('.delete-button')) {
-    const id = e.target.closest('.delete-button').getAttribute('data-id');
+  } else if (e.target.closest('.stock-delete-button')) {
+    const id = e.target.closest('.stock-delete-button').getAttribute('data-id');
     deleteItem(id);
   }
 });
@@ -441,6 +458,13 @@ function removeTableRow(id) {
     updateRowNumbers();
   }
 }
+
+function updateRowNumbers() {
+  const rows = document.querySelectorAll('.stock__table tbody tr');
+  rows.forEach((row, index) => {
+    row.cells[0].textContent = index + 1; // Обновляем номер строки, предполагая что номер находится в первой ячейке
+  });
+}
 // \---Удаление_____
 
 
@@ -460,7 +484,7 @@ if (event.target.closest('.stock__btn-add')) {
 }
 
    // Закрытие формы продукта
-   if (event.target.closest('.product-form__close') || event.target.closest('.cancel')) {
+   if (event.target.closest('.product-form__close') || event.target.closest('.product-form__cancel-btn')) {
     hideProductForm();
     clearFormContent(); // Очистка содержимого формы
 }
@@ -483,11 +507,11 @@ function hideProductForm() {
 
 // Функция для очистки содержимого формы
 function clearFormContent() {
-  const formBody = document.getElementById('formBody');
-  const formContents = formBody.querySelectorAll('.form-content');
-  formContents.forEach(formContent => {
-      const inputs = formContent.querySelectorAll('input');
-      const selects = formContent.querySelectorAll('select');
+  const productFormBody = document.getElementById('productFormBody');
+  const productFormContents = productFormBody.querySelectorAll('.product-form__content');
+  productFormContents.forEach(productFormContent => {
+      const inputs = productFormContent.querySelectorAll('input');
+      const selects = productFormContent.querySelectorAll('select');
 
       inputs.forEach(input => {
           input.value = ''; // Сброс значения текстовых полей
@@ -502,7 +526,7 @@ function clearFormContent() {
 document.addEventListener('DOMContentLoaded', function() {
   const tabsContainer = document.getElementById('tabs');
   const addTabButton = tabsContainer.querySelector('.add-tab');
-  const formBody = document.getElementById('formBody');
+  const productFormBody = document.getElementById('productFormBody');
   let tabCount = tabsContainer.querySelectorAll('.tab').length;
   var currentTabToClose = null;
   var closeModalButton = document.getElementById("closeModalButton");
@@ -521,7 +545,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
   function activateTab(number) {
       const allTabs = tabsContainer.querySelectorAll('.tab');
-      const allForms = formBody.querySelectorAll('.form-content');
+      const allForms = productFormBody.querySelectorAll('.product-form__content');
 
       allTabs.forEach(tab => {
           tab.classList.remove('active');
@@ -532,7 +556,7 @@ document.addEventListener('DOMContentLoaded', function() {
       });
 
       const activeTab = tabsContainer.querySelector(`.tab[data-tab="${number}"]`);
-      const activeForm = formBody.querySelector(`.form-content[data-tab="${number}"]`);
+      const activeForm = productFormBody.querySelector(`.product-form__content[data-tab="${number}"]`);
 
       if (activeTab && activeForm) {
           activeTab.classList.add('active');
@@ -544,10 +568,12 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   function createFormContent(number) {
-      const formContent = document.createElement('div');
-      formContent.classList.add('form-content');
-      formContent.dataset.tab = number;
-      formContent.innerHTML = `
+      const productFormContent = document.createElement('div');
+      productFormContent.classList.add('form-content');
+      productFormContent.classList.add('product-form__content');
+
+      productFormContent.dataset.tab = number;
+      productFormContent.innerHTML = `
           <div class="input-group">
               <label for="supplier-${number}">Поставщик</label>
               <input type="text" id="supplier-${number}" name="supplier" data-tab="${number}" placeholder="Введите наименование поставщика">
@@ -592,10 +618,10 @@ document.addEventListener('DOMContentLoaded', function() {
       <input type="number" id="price-${number}" name="price" data-tab="${number}">
   </div>
       `;
-      formBody.appendChild(formContent);
+      productFormBody.appendChild(productFormContent);
 
       // Добавляем слушатели события input на поля ввода
-      const inputElements = formContent.querySelectorAll('input, select');
+      const inputElements = productFormContent.querySelectorAll('input, select');
       inputElements.forEach(input => {
           input.addEventListener('input', updateSaveButtonState);
       });
@@ -616,7 +642,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
   function updateTabsNumbering() {
       const tabs = tabsContainer.querySelectorAll('.tab');
-      const forms = formBody.querySelectorAll('.form-content');
+      const forms = productFormBody.querySelectorAll('.product-form__content');
 
       tabs.forEach((tab, index) => {
           const newIndex = index + 1;
@@ -632,8 +658,8 @@ document.addEventListener('DOMContentLoaded', function() {
       });
   }
 
-  function updateFormContentIDs(formContent, index) {
-      const inputGroups = formContent.querySelectorAll('.input-group');
+  function updateFormContentIDs(productFormContent, index) {
+      const inputGroups = productFormContent.querySelectorAll('.input-group');
       inputGroups.forEach(group => {
           const label = group.querySelector('label');
           const input = group.querySelector('input, select');
@@ -655,9 +681,9 @@ document.addEventListener('DOMContentLoaded', function() {
   function deleteTab() {
       if (currentTabToClose) {
           const number = parseInt(currentTabToClose.dataset.tab);
-          const formContent = formBody.querySelector(`.form-content[data-tab="${number}"]`);
-          if (formContent) {
-              formContent.remove();
+          const productFormContent = productFormBody.querySelector(`.product-form__content[data-tab="${number}"]`);
+          if (productFormContent) {
+              productFormContent.remove();
           }
           currentTabToClose.remove();
           updateTabsNumbering();
@@ -671,10 +697,10 @@ document.addEventListener('DOMContentLoaded', function() {
       }
   }
 
-  var confirmationModal = document.getElementById("confirmationModal");
-  var modalTabNumber = document.getElementById("modalTabNumber");
-  var confirmDeleteButton = document.getElementById("confirmDelete");
-  var cancelDeleteButton = document.getElementById("cancelDelete");
+  let confirmationModal = document.getElementById("confirmationModal");
+  let modalTabNumber = document.getElementById("modalTabNumber");
+  let confirmDeleteButton = document.getElementById("confirmDelete");
+  let cancelDeleteButton = document.getElementById("cancelDelete");
 
   function showModal(tabNumber) {
       modalTabNumber.textContent = tabNumber;
@@ -712,13 +738,13 @@ document.addEventListener('DOMContentLoaded', function() {
       }
 
       const tabNumber = currentTab.dataset.tab;
-      const formContent = formBody.querySelector(`.form-content[data-tab="${tabNumber}"]`);
-      if (!formContent) {
+      const productFormContent = productFormBody.querySelector(`.product-form__content[data-tab="${tabNumber}"]`);
+      if (!productFormContent) {
           return;
       }
 
-      const inputElements = formContent.querySelectorAll('input, select');
-      const saveButton = document.querySelector('.save');
+      const inputElements = productFormContent.querySelectorAll('input, select');
+      const productFormSaveBtn = document.querySelector('.product-form__save-btn');
 
       let allFieldsFilled = true;
       inputElements.forEach(input => {
@@ -727,7 +753,7 @@ document.addEventListener('DOMContentLoaded', function() {
           }
       });
 
-      saveButton.disabled = !allFieldsFilled;
+      productFormSaveBtn.disabled = !allFieldsFilled;
   }
 
   addTabButton.addEventListener('click', addTab);
@@ -743,7 +769,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // --------Отправка формы на сервер_______________
 
-document.querySelector('.save').addEventListener('click', sendAllTabsDataToServer);
+document.querySelector('.product-form__save-btn').addEventListener('click', sendAllTabsDataToServer);
 
 // Функция преобразования даты в строку ISO 8601
 function toISO8601String(dateString) {
@@ -754,7 +780,7 @@ function toISO8601String(dateString) {
 // Функция для сбора данных из всех заполненных табов
 function collectDataFromAllTabs() {
   const allTabsData = [];
-  const allForms = document.querySelectorAll('.form-content');
+  const allForms = document.querySelectorAll('.product-form__content');
 
   allForms.forEach((form, tabIndex) => {
     const tabData = {};

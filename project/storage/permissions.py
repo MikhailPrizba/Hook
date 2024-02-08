@@ -17,3 +17,5 @@ class IsNotHookah(permissions.BasePermission):
             return True
 
         return request.user.user_role != User.UserRoleChoices.HOOKAH
+
+

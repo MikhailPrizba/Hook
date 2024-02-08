@@ -31,9 +31,9 @@ class TobaccoViewSet(DeleteViewMixin, viewsets.ModelViewSet):
         return Response(
             serializer.data, status=status.HTTP_201_CREATED, headers=headers
         )
+
     @action(detail=False)
     def get_random_recipes(self, request, *args, **kwargs):
-
         queryset = self.filter_queryset(self.get_queryset())
         filtered_data = []
         random_records = Generator.objects.filter(is_active=True).order_by("?")[:3]
@@ -108,4 +108,3 @@ class ReduceTobaccoWeightView(generics.GenericAPIView):
             )
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
-

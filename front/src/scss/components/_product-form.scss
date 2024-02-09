@@ -32,7 +32,8 @@ overflow-y: auto; */
   z-index: 4;
 }
 
-.product-form__close {
+.product-form__close, 
+.user-form__close{
   position: absolute;
   right: 20px; /* Уменьшено значение отступа справа */
   top: 10px; /* Добавлен отступ сверху */
@@ -320,6 +321,15 @@ padding-bottom: 40px;
 }
 
 
+.form-title{
 
+padding: 20px 90px;
+font-size: 18px;
+font-weight: 600;
+line-height: 25px;
+text-align: center;
+
+background: rgb(250, 160, 85);
+}
 
 

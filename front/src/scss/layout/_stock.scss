@@ -265,14 +265,16 @@ line-height: normal;
 
 
 .edit-save-cancel-buttons {
+  
   position: absolute;
   top: 70px;
   right: 40px;
-  // padding: 5px 15px;
+
+  display: flex;
   flex-direction: row; 
   justify-content: center;
   align-items: center; 
-  gap: 6px;
+  gap: 16px;
   border-radius: 10px;
   border: none;
   background: transparent;

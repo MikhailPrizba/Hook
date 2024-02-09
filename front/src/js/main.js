@@ -1,29 +1,32 @@
 
 
-
 // --------------Header_____________________
+import { toggleMenu } from './header.js';
 
-function toggleMenu() {
-  const header = document.querySelector('.header');
-  header.classList.toggle('collapsed');
-}
+document.querySelector('.burger-menu').addEventListener('click', toggleMenu);
 
 // --------------Выводим секцию__________________
+import { showSection } from './navigation.js';
 
-function showSection(event, sectionId) {
-  event.preventDefault(); // Предотвращаем стандартное поведение ссылки
-
-  // Скрываем все секции
-  document.querySelectorAll('section').forEach(section => {
-    section.classList.remove('active-section');
+document.addEventListener('DOMContentLoaded', () => {
+  const menuLinks = document.querySelectorAll('.menu__item-link');
+  menuLinks.forEach(link => {
+    link.addEventListener('click', (event) => {
+      const sectionId = link.getAttribute('href');
+      showSection(event, sectionId);
+    });  
   });
 
-  // Показываем нужную секцию
-  const section = document.getElementById(sectionId);
-  if (section) {
-    section.classList.add('active-section');
-  }
-}
+  const logoLink = document.querySelector('.logo-menu'); // Предполагая, что класс .logo уникален для логотипа
+  logoLink.addEventListener('click', (event) => {
+    event.preventDefault(); // Предотвратить стандартное поведение ссылки
+    const sectionId = logoLink.getAttribute('href');
+    showSection(event, sectionId); // Используем sectionId напрямую без изменений
+  });
+});
+
+
+
 // --------------Выводим секцию__________________
 
 // --------------Header_____________________
@@ -41,10 +44,10 @@ function showLoginPage() {
 }
 
 // Функция для выхода из системы
-function logout() {
-  localStorage.removeItem('authToken');
-  showLoginPage();
-}
+// function logout() {
+//   localStorage.removeItem('authToken');
+//   showLoginPage();
+// }
 
 // Обработчик события загрузки DOM
 document.addEventListener('DOMContentLoaded', (event) => {
@@ -54,6 +57,8 @@ document.addEventListener('DOMContentLoaded', (event) => {
   } else {
     showLoginPage(); // Если токен не найден, показываем страницу входа
   }
+
+  
 
   // Обработка формы входа
   const loginForm = document.querySelector('.login-form');
@@ -72,6 +77,8 @@ document.addEventListener('DOMContentLoaded', (event) => {
       fetch('http://188.68.221.107/api/v1/auth/token/login', {
         method: 'POST',
         headers: {
+          'Accept': 'application/json', 
+          'User-Agent': 'Thunder Client (https://www.thunderclient.io)', 
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(postData)
@@ -127,42 +134,81 @@ function clearLoginFormFields() {
 let organization;
 // Функция для получения данных с сервера Get
 function fetchData() {
-  fetch('http://188.68.221.107/api/v1/storage/tobacco/')
-    .then(response => response.json())
-    .then(data => {
-      updateTable(data);
+  const authToken = localStorage.getItem('authToken');
+  if (!authToken) {
+    console.error('Токен аутентификации не найден.');
+    return; // Прекращаем выполнение, если токен не найден
+  }
 
-      // Предполагаем, что `data` является массивом объектов
-      data.forEach(item => {
-        if(item.organization) { // Проверяем, существует ли свойство organization в каждом объекте
-          organization = item.organization; // Сохраняем значение organization из объекта
-          console.log('Organization:', organization); // Выводим значение для проверки
-        }
-      });
-    })
-    .catch(error => {
-      console.error('Error fetching data: ', error);
+  console.log('Начало отправки данных, токен аутентификации найден.');
+
+  fetch('http://188.68.221.107/api/v1/storage/tobacco/', {
+    method: 'GET',
+    headers: {
+      'Accept': 'application/json', // Добавляем заголовок Accept
+      'User-Agent': 'Thunder Client (https://www.thunderclient.io)', // Добавляем заголовок User-Agent
+      'Content-Type': 'application/json',
+      'Authorization': `Token ${authToken}` 
+    }
+  })
+  
+  .then(response => {
+    if (!response.ok) { // Проверяем, что сервер ответил статусом успеха
+      throw new Error('Network response was not ok');
+    }
+    return response.json();
+  })
+  .then(data => {
+    updateTable(data);
+    // Предполагаем, что `data` является массивом объектов
+    data.forEach(item => {
+      if(item.organization) { // Проверяем, существует ли свойство organization в каждом объекте
+        console.log('Organization:', item.organization); // Выводим значение для проверки
+      }
     });
+  })
+  .catch(error => {
+    console.error('Error fetching data: ', error);
+  });
 }
 
+
+// function toggleEditDeleteButtons(id) {
+//   const editDeleteButtons = document.getElementById(`edit-delete-${id}`);
+//   editDeleteButtons.style.display = editDeleteButtons.style.display === 'none' ? 'flex' : 'none';
+//   toggleRowStyle(id); 
+// }
+
+document.addEventListener('click', function(event) {
+  if (event.target.matches('[data-action="toggle"]')) {
+    const id = event.target.getAttribute('data-id');
+    toggleEditDeleteButtons(id);
+  } else if (event.target.matches('[data-action="edit"]')) {
+    const id = event.target.getAttribute('data-id');
+    startEditing(id);
+  } else if (event.target.matches('[data-action="delete"]')) {
+    const id = event.target.getAttribute('data-id');
+    deleteItem(id);
+  }
+});
 
 function toggleEditDeleteButtons(id) {
-  const editDeleteButtons = document.getElementById(`edit-delete-${id}`);
-  editDeleteButtons.style.display = editDeleteButtons.style.display === 'none' ? 'flex' : 'none';
-  toggleRowStyle(id); 
+  const editDeleteDiv = document.getElementById(`edit-delete-${id}`);
+  editDeleteDiv.style.display = editDeleteDiv.style.display === 'none' ? '' : 'none';
 }
 
 
+// // ------------Меняем цвет строки_______________________
+// function toggleRowStyle(id) {
+//   const row = document.querySelector(`tr data-id="${item.id}"`);
+//   if (row.classList.contains('highlighted')) {
+//     row.classList.remove('highlighted');
+//   } else {
+//     row.classList.add('highlighted');
+//   }
+// }
 
-// ------------Меняем цвет строки_______________________
-function toggleRowStyle(id) {
-  const row = document.querySelector(`tr[data-id="${id}"]`);
-  if (row.classList.contains('highlighted')) {
-    row.classList.remove('highlighted');
-  } else {
-    row.classList.add('highlighted');
-  }
-}
+
 
 function formatDate(dateString) {
   const date = new Date(dateString);
@@ -178,7 +224,6 @@ function updateTable(data) {
   const tableBody = document.querySelector('.stock__table tbody');
   tableBody.innerHTML = '';
   data.forEach((item, index) => {
-    // Преобразовать даты перед отображением
     const formattedPurchaseDate = formatDate(item.purchase_date);
     const formattedBestBeforeDate = formatDate(item.best_before_date);
 
@@ -193,21 +238,20 @@ function updateTable(data) {
       <td>${item.weight}</td>
       <td>${item.price}</td>
       <td class="actions">
-        <div class="action-buttons">
-          <button class="options-button" onclick="toggleEditDeleteButtons(${item.id})">...</button>
-          <div class="edit-stock-delete-buttons" id="edit-delete-${item.id}" style="display: none;">
-            <button class="stock-edit-button" data-id="${item.id}"> <i class="ri-edit-line"></i> <span>Редактировать</span>
-            </button>
-            <button class="stock-delete-button" data-id="${item.id}"><i class="ri-delete-bin-6-line"></i><span>Удалить</span>
-            </button>
-          </div>
-        </div>
+      <div class="action-buttons">
+  <button class="options-button" data-action="toggle" data-id="${item.id}">...</button>
+  <div class="edit-stock-delete-buttons" id="edit-delete-${item.id}" style="display: none;">
+    <button class="stock-edit-button" data-action="edit" data-id="${item.id}"><i class="ri-edit-line"></i> <span>Редактировать</span></button>
+    <button class="stock-delete-button" data-action="delete" data-id="${item.id}"> <i class="ri-delete-bin-6-line"></i><span>Удалить</span></button>
+  </div>
+</div>
       </td>
     </tr>`;
     tableBody.innerHTML += row;
   });
   document.querySelector('.stock__box').style.display = data.length === 0 ? 'flex' : 'none';
 }
+
 
 
 
@@ -238,6 +282,7 @@ function startEditing(id) {
   }
   const cells = row.querySelectorAll('td');
   row.style.height = '100px';
+  row.style.background = 'rgb(254, 243, 234)'
 
   // Превращаем каждую ячейку в редактируемое поле, кроме первой и последней (индекс и кнопки действий)
   for (let i = 1; i < cells.length - 1; i++) {
@@ -256,7 +301,7 @@ function startEditing(id) {
 
   const cancelButton = document.createElement('button');
   cancelButton.textContent = 'Отменить';
-  cancelButton.classList.add('stock-save-cancel-button');
+  cancelButton.classList.add('stock-cancel-button');
   cancelButton.onclick = () => cancelEdit(id);
 
   const buttonsContainer = document.getElementById(`edit-delete-${id}`);
@@ -322,8 +367,10 @@ function updateItemOnServer(id, updatedItem) {
   fetch(url, {
     method: 'PATCH',
     headers: {
+      'Accept': 'application/json', // Добавляем заголовок Accept
+      'User-Agent': 'Thunder Client (https://www.thunderclient.io)', // Добавляем заголовок User-Agent
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${authToken}`
+      'Authorization': `Token ${authToken}` 
     },
     body: JSON.stringify(updatedItem)
   })
@@ -370,14 +417,13 @@ function updateTableRow(id, updatedData) {
     // Возвращаем кнопки "Редактировать" и "Удалить"
     const actionCell = cells[cells.length - 1];
     actionCell.innerHTML = `
-      <div class="action-buttons">
-        <button class="options-button" onclick="toggleEditDeleteButtons(${id})">...</button>
-        <div class="edit-stock-delete-buttons" id="edit-delete-${id}" style="display: none;">
-          <button class="stock-edit-button" onclick="startEditing(${id})"><i class="ri-edit-line"></i> <span>Редактировать</span>
-          </button>
-          <button class="stock-delete-button" onclick="deleteItem(${id})"><i class="ri-delete-bin-6-line"></i><span>Удалить</span></button>
-        </div>
-      </div>
+    <div class="action-buttons">
+    <button class="options-button" data-action="toggle" data-id="${id}">...</button>
+    <div class="edit-stock-delete-buttons" id="edit-delete-${id}" style="display: none;">
+      <button class="stock-edit-button" data-action="edit" data-id="${id}"><i class="ri-edit-line"></i> <span>Редактировать</span></button>
+      <button class="stock-delete-button" data-action="delete" data-id="${id}"> <i class="ri-delete-bin-6-line"></i><span>Удалить</span></button>
+    </div>
+  </div>
     `;
   }
 }
@@ -396,13 +442,13 @@ function cancelEdit(id) {
   // Восстановление исходного состояния кнопок
   const actionCell = cells[cells.length - 1];
   actionCell.innerHTML = `
-    <div class="action-buttons">
-      <button class="options-button" onclick="toggleEditDeleteButtons(${id})">...</button>
-      <div class="edit-stock-delete-buttons" id="edit-delete-${id}" style="display: none;">
-        <button class="stock-edit-button" onclick="startEditing(${id})"><i class="ri-edit-line"></i> <span>Редактировать</span></button>
-        <button class="stock-delete-button" onclick="deleteItem(${id})"> <i class="ri-delete-bin-6-line"></i><span>Удалить</span></button>
-      </div>
-    </div>
+  <div class="action-buttons">
+  <button class="options-button" data-action="toggle" data-id="${id}">...</button>
+  <div class="edit-stock-delete-buttons" id="edit-delete-${id}" style="display: none;">
+    <button class="stock-edit-button" data-action="edit" data-id="${id}"><i class="ri-edit-line"></i> <span>Редактировать</span></button>
+    <button class="stock-delete-button" data-action="delete" data-id="${id}"> <i class="ri-delete-bin-6-line"></i><span>Удалить</span></button>
+  </div>
+</div>
   `;
 }
 
@@ -432,7 +478,7 @@ function deleteItem(id) {
   fetch(url, {
     method: 'DELETE',
     headers: {
-      'Authorization': `Bearer ${authToken}`
+      'Authorization': `Token ${authToken}`
 
     }
   })
@@ -473,55 +519,67 @@ function updateRowNumbers() {
 
 // -----------------Табы_____________________
 
-
-// Делегирование событий для обработки кликов на кнопках
 document.addEventListener('click', function(event) {
   const target = event.target;
 
-// Открытие формы продукта
-if (event.target.closest('.stock__btn-add')) {
-  showProductForm();
-}
+  // Общая функция для открытия форм
+  if (target.closest('.stock__btn-add, .staffAdministration__btn-add')) {
+    const formId = target.closest('.stock__btn-add') ? '#productForm' : '#userForm';
+    toggleForm(formId, true); // Показать форму
+  }
 
-   // Закрытие формы продукта
-   if (event.target.closest('.product-form__close') || event.target.closest('.product-form__cancel-btn')) {
-    hideProductForm();
-    clearFormContent(); // Очистка содержимого формы
-}
+  // Общая функция для закрытия форм
+  if (target.closest('.user-form__close, .product-form__close') || target.closest('.product-form__cancel-btn')) {
+    const formId = target.closest('.user-form, .product-form').id;
+    toggleForm(`#${formId}`, false); // Скрыть форму
+    clearFormContent(formId); // Очистить содержимое формы
+  }
 });
 
-// Функция для отображения формы продукта
-function showProductForm() {
-  document.querySelector('#productForm').style.display = 'block';
-  document.body.insertAdjacentHTML('beforeend', '<div class="modal-backdrop"></div>');
-}
-
-// Функция для скрытия формы продукта
-function hideProductForm() {
-  document.querySelector('#productForm').style.display = 'none';
-  const modalBackdrop = document.querySelector('.modal-backdrop');
-  if (modalBackdrop) {
+function toggleForm(formId, show) {
+  document.querySelector(formId).style.display = show ? 'block' : 'none';
+  if (show) {
+    document.body.insertAdjacentHTML('beforeend', '<div class="modal-backdrop"></div>');
+  } else {
+    const modalBackdrop = document.querySelector('.modal-backdrop');
+    if (modalBackdrop) {
       modalBackdrop.remove();
+    }
   }
 }
 
-// Функция для очистки содержимого формы
-function clearFormContent() {
-  const productFormBody = document.getElementById('productFormBody');
-  const productFormContents = productFormBody.querySelectorAll('.product-form__content');
-  productFormContents.forEach(productFormContent => {
-      const inputs = productFormContent.querySelectorAll('input');
-      const selects = productFormContent.querySelectorAll('select');
+function clearFormContent(formId) {
+  const formBody = document.getElementById(formId + 'Body');
+  if (!formBody) return; // Выход, если тело формы не найдено
 
-      inputs.forEach(input => {
-          input.value = ''; // Сброс значения текстовых полей
-      });
+  const formContents = formBody.querySelectorAll('.form-content, .product-form__content');
+  formContents.forEach(formContent => {
+    const inputs = formContent.querySelectorAll('input');
+    const selects = formContent.querySelectorAll('select');
 
-      selects.forEach(select => {
-          select.selectedIndex = 0; // Сброс выбранного значения в выпадающих списках
-      });
+    inputs.forEach(input => {
+      input.value = ''; // Сброс значения текстовых полей
+    });
+
+    selects.forEach(select => {
+      select.selectedIndex = 0; // Сброс выбранного значения в выпадающих списках
+    });
   });
 }
+
+// function resetTabs() {
+//   const tabsContainer = document.getElementById('tabs');
+//   const productFormBody = document.getElementById('productFormBody');
+  
+//   // Удаление всех табов, кроме кнопки добавления нового таба
+//   tabsContainer.querySelectorAll('.tab').forEach(tab => tab.remove());
+  
+//   // Удаление всех форм табов
+//   productFormBody.querySelectorAll('.product-form__content').forEach(formContent => formContent.remove());
+  
+//   // Добавление одного нового таба, чтобы форма была не пустой
+//   addTab(); // Предполагаемая функция добавления таба
+// }
 
 document.addEventListener('DOMContentLoaded', function() {
   const tabsContainer = document.getElementById('tabs');
@@ -769,7 +827,20 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // --------Отправка формы на сервер_______________
 
-document.querySelector('.product-form__save-btn').addEventListener('click', sendAllTabsDataToServer);
+document.querySelector('.product-form__save-btn').addEventListener('click', function() {
+  // Предполагаемая функция отправки данных на сервер
+  sendAllTabsDataToServer();
+
+  // Скрытие и очистка формы после сохранения
+  toggleForm('#productForm', false); // Скрыть форму
+  clearFormContent('productForm'); // Очистить содержимое формы
+
+  // Удаление всех табов и создание одного нового
+  // resetTabs();
+  fetchData();
+});
+
+
 
 // Функция преобразования даты в строку ISO 8601
 function toISO8601String(dateString) {
@@ -847,7 +918,7 @@ function sendAllTabsDataToServer() {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${authToken}`,
+        'Authorization': `Token ${authToken}`,
       },
       body: JSON.stringify(tabData),
     };
@@ -871,3 +942,102 @@ function sendAllTabsDataToServer() {
       });
   });
 }
+
+
+
+// _____________Администрирование персонала---------------------------
+
+// function getWorkersAndDisplayInTable() {
+//   const authToken = localStorage.getItem('authToken');
+//   if (!authToken) {
+//     console.error('Токен аутентификации не найден');
+//     return;
+//   }
+
+//   // Создаем объект headers
+//   const headers = new Headers({
+//     'Content-Type': 'application/json',
+//     'Authorization': `Token ${authToken}`
+//   });
+
+//   // Передаем headers в опции fetch
+//   fetch('http://188.68.221.107/api/v1/worker/', { headers: headers })
+//     .then(response => {
+//       if (!response.ok) {
+//         throw new Error('Network response was not ok ' + response.statusText);
+//       }
+//       return response.json();
+//     })
+//     .then(data => {
+//       updateTableWithWorkers(data);
+//     })
+//     .catch(error => {
+//       console.error('There has been a problem with your fetch operation:', error);
+//     });
+// }
+
+// function updateTableWithWorkers(workers) {
+//   const tableBody = document.querySelector('.stock__table tbody');
+  
+//   tableBody.innerHTML = ''; // Очищаем текущие строки таблицы
+
+//   // Для каждого работника создаем строку таблицы
+//   workers.forEach(worker => {
+//     // Предполагаем, что user_role и organization опциональны, поэтому используем оператор "||" для задания стандартных значений
+//     const role = worker.user.user_role || 'Не указана';
+//     const organization = worker.organization || 'Не указано';
+
+//     const row = `
+//       <tr>
+//         <td>${worker.user.first_name}</td>
+//         <td>${worker.user.last_name}</td>
+//         <td>${worker.user.email}</td>
+//         <td>${worker.user.username}</td>
+//         <td>${role}</td>
+//         <td>Дополнительные действия</td> <!-- Замените это на соответствующий контент -->
+//       </tr>
+//     `;
+//     tableBody.insertAdjacentHTML('beforeend', row);
+//   });
+// }
+
+// // Вызовите эту функцию, чтобы получить данные и обновить таблицу, когда это необходимо.
+// getWorkersAndDisplayInTable();
+
+
+
+// ________________Анимация-------------------
+
+import { animateText, animateImage, animatelist } from './animations.js';
+
+// Функция для сброса анимаций
+function resetAnimations() {
+  // Удаляем инлайновые стили, если они были добавлены через JS
+  document.querySelectorAll('.animate-text, .animate-image, .animate-list').forEach(el => {
+      el.style = ''; // Сбрасываем все инлайновые стили
+  });
+
+  // Дополнительно, если используются классы для анимации, можно удалить эти классы
+  document.querySelectorAll('.animated').forEach(el => {
+      el.classList.remove('animated'); // Удаляем классы анимации
+  });
+}
+
+
+
+// Функция для запуска анимаций
+function startAnimations() {
+    animateText();
+    animateImage();
+    animatelist();
+}
+
+// Добавляем обработчик события на клик по ссылке, используя startAnimations напрямую
+document.getElementById('startAnimation').addEventListener('click', startAnimations);
+
+// Когда DOM загрузится, запустим анимации, также используя startAnimations напрямую
+window.addEventListener('DOMContentLoaded', startAnimations);
+
+
+
+// ________________Анимация-------------------

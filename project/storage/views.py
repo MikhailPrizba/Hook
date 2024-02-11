@@ -36,25 +36,29 @@ class TobaccoViewSet(DeleteViewMixin, viewsets.ModelViewSet):
     def get_random_recipes(self, request, *args, **kwargs):
         queryset = self.filter_queryset(self.get_queryset())
         filtered_data = []
-        random_records = Generator.objects.filter(is_active=True).order_by("?")[:3]
-        for random_record in random_records:
-            data = []
-            min_counts = {"main": 12, "second": 6, "tint": 2}
-
-            for combination in ["main", "second", "tint"]:
-                queryset_data = (
-                    queryset.filter(
-                        taste_group=getattr(random_record, combination),
-                        weight__gt=min_counts.get(combination, 0),
+        unique_data = set()
+        while len(filtered_data) != 3:
+            random_records = Generator.objects.filter(is_active=True).order_by("?")[:1]
+            for random_record in random_records:
+                data = []
+                min_counts = {"main": 12, "second": 6, "tint": 2}
+                for combination in ["main", "second", "tint"]:
+                    queryset_data = (
+                        queryset.filter(
+                            taste_group=getattr(random_record, combination),
+                            weight__gt=min_counts.get(combination, 0),
+                        )
+                        .order_by("?")
+                        .values()
+                        .first()
                     )
-                    .order_by("?")
-                    .values()
-                    .first()
-                )
-                if queryset_data:
-                    data.append(queryset_data)
-            filtered_data.append(data)
-
+                    if queryset_data:
+                        data.append(queryset_data)
+                data_tuple = tuple(tuple(d.items()) for d in data)
+                if len(data) == 3 and data_tuple not in unique_data:
+                    filtered_data.append(data)
+                    unique_data.add(data_tuple)
+                    break
         return Response(filtered_data)
 
 

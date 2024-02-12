@@ -40,7 +40,7 @@ class TobaccoViewSet(DeleteViewMixin, viewsets.ModelViewSet):
         count = 0
         while len(filtered_data) != 3:
             random_records = Generator.objects.filter(is_active=True).order_by("?")[:1]
-            if count == 20:
+            if count == 50:
                 return Response(filtered_data)
             for random_record in random_records:
                 data = []

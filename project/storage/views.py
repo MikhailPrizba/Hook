@@ -37,8 +37,11 @@ class TobaccoViewSet(DeleteViewMixin, viewsets.ModelViewSet):
         queryset = self.filter_queryset(self.get_queryset())
         filtered_data = []
         unique_data = set()
+        count = 0
         while len(filtered_data) != 3:
             random_records = Generator.objects.filter(is_active=True).order_by("?")[:1]
+            if count == 20:
+                return Response(filtered_data)
             for random_record in random_records:
                 data = []
                 min_counts = {"main": 12, "second": 6, "tint": 2}
@@ -59,6 +62,7 @@ class TobaccoViewSet(DeleteViewMixin, viewsets.ModelViewSet):
                     filtered_data.append(data)
                     unique_data.add(data_tuple)
                     break
+                count += 1
         return Response(filtered_data)
 
 
@@ -70,6 +74,9 @@ class ReduceTobaccoWeightView(generics.GenericAPIView):
             weight_to_reduce = [12, 6, 2]
             data = request.data
 
+            if not data:
+                return Response({"message": "No data provided"}, status=status.HTTP_400_BAD_REQUEST)
+
             for index, tobacco in enumerate(data):
                 tobacco_taste = tobacco["taste"]
                 tobacco_taste_group = tobacco["taste_group"]
@@ -80,6 +87,7 @@ class ReduceTobaccoWeightView(generics.GenericAPIView):
                         taste=tobacco_taste,
                         taste_group=tobacco_taste_group,
                         weight__lt=weight_to_reduce_current,
+                        is_active=True,
                     )
                 except Tobacco.DoesNotExist:
                     continue

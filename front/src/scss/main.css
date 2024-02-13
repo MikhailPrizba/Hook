@@ -898,10 +898,21 @@ section {
 .options-button {
   border-radius: 40%;
   background-color: transparent;
+  padding: 4px;
   border: none;
 }
 
 .options-button:hover {
+  background-color: #F9882B;
+  box-shadow: 0px 3px 4px 0px rgba(0, 0, 0, 0.12);
+}
+
+.staff-options-button {
+  border-radius: 40%;
+  background-color: transparent;
+  border: none;
+}
+.staff-options-button:hover {
   background-color: #F9882B;
   box-shadow: 0px 3px 4px 0px rgba(0, 0, 0, 0.12);
 }
@@ -928,7 +939,7 @@ section {
   position: relative;
 }
 
-.edit-stock-delete-buttons {
+.table-edit-delete-buttons {
   position: absolute;
   top: 30px;
   right: 30px;
@@ -940,7 +951,7 @@ section {
   border: 1px solid var(--FAA055, #FAA055);
   background: var(--FFFFFF, #FFF);
 }
-.edit-stock-delete-buttons .stock-edit-button, .edit-stock-delete-buttons .stock-delete-button {
+.table-edit-delete-buttons .table-edit-button, .table-edit-delete-buttons .table-delete-button {
   padding: 6px 12px;
   align-items: center;
   width: 100%;
@@ -986,8 +997,8 @@ section {
   background: transparent;
 }
 
-.stock-edit-button,
-.stock-delete-button {
+.table-edit-button,
+.table-delete-button {
   display: flex;
   align-items: center;
   border: none;
@@ -1003,13 +1014,13 @@ section {
   line-height: normal;
 }
 
-.stock-edit-button:hover,
-.stock-delete-button:hover {
+.table-edit-button:hover,
+.table-delete-button:hover {
   border-radius: 8px;
   background: var(--FEF3EA, #FEF3EA);
 }
 
-.stock-edit-button:active {
+.table-edit-button:active {
   border-radius: 8px;
   background: var(--FDCFAA, #FDCFAA);
 }

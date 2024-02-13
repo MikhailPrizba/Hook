@@ -1,18 +1,29 @@
 
 
-// --------------Header_____________________
 import { toggleMenu } from './header.js';
+import { showSection } from './navigation.js';
+import { formatDate, toISOFormat, toISO8601String } from './helpers.js';
+
+
+
+
+// --------------Header_____________________
 
 document.querySelector('.burger-menu').addEventListener('click', toggleMenu);
 
 // --------------Выводим секцию__________________
-import { showSection } from './navigation.js';
 
 document.addEventListener('DOMContentLoaded', () => {
   const menuLinks = document.querySelectorAll('.menu__item-link');
   menuLinks.forEach(link => {
     link.addEventListener('click', (event) => {
       const sectionId = link.getAttribute('href');
+      if (sectionId === '#stock') {
+        event.preventDefault(); // Предотвратить стандартное поведение ссылки
+        fetchAndUpdateTobaccoStock();
+      } else {
+        showSection(event, sectionId);
+      }
       showSection(event, sectionId);
     });  
   });
@@ -24,7 +35,6 @@ document.addEventListener('DOMContentLoaded', () => {
     showSection(event, sectionId); // Используем sectionId напрямую без изменений
   });
 });
-
 
 
 // --------------Выводим секцию__________________
@@ -43,70 +53,59 @@ function showLoginPage() {
   document.querySelector('.page-container').style.display = 'none';
 }
 
-// Функция для выхода из системы
-// function logout() {
-//   localStorage.removeItem('authToken');
-//   showLoginPage();
-// }
-
 // Обработчик события загрузки DOM
-document.addEventListener('DOMContentLoaded', (event) => {
+document.addEventListener('DOMContentLoaded', async (event) => {
   // Проверка аутентификации пользователя
   if (localStorage.getItem('authToken')) {
-    showMainPage(); // Если токен найден, показываем главную страницу
+    showMainPage();
   } else {
-    showLoginPage(); // Если токен не найден, показываем страницу входа
+    showLoginPage();
   }
 
-  
-
-  // Обработка формы входа
   const loginForm = document.querySelector('.login-form');
+  const logoutButton = document.querySelector('.output-btn');
+  const loginInput = document.getElementById('login');
+  const passwordInput = document.getElementById('password');
+  const errorMessageElement = document.getElementById('error-message');
+
   if (loginForm) {
-    loginForm.addEventListener('submit', function (e) {
+    loginForm.addEventListener('submit', async (e) => {
       e.preventDefault();
-
-      const login = document.getElementById('login').value;
-      const password = document.getElementById('password').value;
-
       const postData = {
-        username: login,
-        password: password
+        username: loginInput.value,
+        password: passwordInput.value,
       };
 
-      fetch('http://188.68.221.107/api/v1/auth/token/login', {
-        method: 'POST',
-        headers: {
-          'Accept': 'application/json', 
-          'User-Agent': 'Thunder Client (https://www.thunderclient.io)', 
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(postData)
-      })
-      .then(response => response.json())
-      .then(data => {
+      try {
+        const response = await fetch('http://188.68.221.107/api/v1/auth/token/login', {
+          method: 'POST',
+          headers: {
+            'Accept': 'application/json', 
+            'User-Agent': 'Thunder Client (https://www.thunderclient.io)', 
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(postData),
+        });
+        const data = await response.json();
+
         if (data.auth_token) {
           console.log('Токен:', data.auth_token);
-          localStorage.setItem('authToken', data.auth_token); // Сохраняем токен в локальном хранилище
+          localStorage.setItem('authToken', data.auth_token);
           showMainPage();
+          clearLoginFormFields();
         } else {
           console.error('Ошибка аутентификации', data);
           errorMessageElement.textContent = 'Ошибка аутентификации';
         }
-      })
-      .catch(error => {
+      } catch (error) {
         console.error('Ошибка сети', error);
-        const errorMessageElement = document.getElementById('error-message');
-        errorMessageElement.textContent = 'Неверный логин или пороль';
-      });
-      
+        errorMessageElement.textContent = 'Неверный логин или пароль';
+      }
     });
   } else {
     console.error('Форма входа не найдена');
   }
 
-  // Настройка кнопки выхода
-  const logoutButton = document.querySelector('.output-btn');
   if (logoutButton) {
     logoutButton.addEventListener('click', logout);
   } else {
@@ -114,62 +113,85 @@ document.addEventListener('DOMContentLoaded', (event) => {
   }
 });
 
-// Функция для выхода из системы
-function logout() {
+async function logout() {
   localStorage.removeItem('authToken');
   showLoginPage();
-  clearLoginFormFields(); // Вызываем функцию для очистки полей ввода
+  clearLoginFormFields();
 }
 
-// Функция для очистки полей ввода формы
 function clearLoginFormFields() {
   document.getElementById('login').value = '';
   document.getElementById('password').value = '';
 }
+
 
 // -----------------Выход_____________________
 
 // -----------------Склад_____________________
 
 let organization;
-// Функция для получения данных с сервера Get
-function fetchData() {
+
+// Функция для получения токена аутентификации
+function getAuthToken() {
   const authToken = localStorage.getItem('authToken');
   if (!authToken) {
     console.error('Токен аутентификации не найден.');
-    return; // Прекращаем выполнение, если токен не найден
+    return null;
   }
+  return authToken;
+}
+
+// Универсальная функция для выполнения запросов к API
+async function fetchDataFromAPI(url, processResponse) {
+  const authToken = getAuthToken();
+  if (!authToken) return;
 
   console.log('Начало отправки данных, токен аутентификации найден.');
 
-  fetch('http://188.68.221.107/api/v1/storage/tobacco/', {
-    method: 'GET',
-    headers: {
-      'Accept': 'application/json', // Добавляем заголовок Accept
-      'User-Agent': 'Thunder Client (https://www.thunderclient.io)', // Добавляем заголовок User-Agent
-      'Content-Type': 'application/json',
-      'Authorization': `Token ${authToken}` 
-    }
-  })
-  
-  .then(response => {
-    if (!response.ok) { // Проверяем, что сервер ответил статусом успеха
-      throw new Error('Network response was not ok');
-    }
-    return response.json();
-  })
-  .then(data => {
-    updateTable(data);
-    // Предполагаем, что `data` является массивом объектов
-    data.forEach(item => {
-      if(item.organization) { // Проверяем, существует ли свойство organization в каждом объекте
-        console.log('Organization:', item.organization); // Выводим значение для проверки
+  try {
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': `Token ${authToken}`
       }
     });
-  })
-  .catch(error => {
-    console.error('Error fetching data: ', error);
+
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    const data = await response.json();
+    processResponse(data);
+  } catch (error) {
+    console.error('Error fetching data:', error);
+  }
+}
+
+// Функции для обработки полученных данных
+function processTobaccoData(data) {
+  updateTable(data); // Обновление таблицы табака
+  data.forEach(item => {
+    if(item.organization) {
+      console.log('Organization:', item.organization);
+    }
   });
+}
+
+function processWorkerData(data) {
+  console.log(data); // Вывод данных о работниках
+  insertDataIntoTable(data); // Вставка данных в таблицу работников
+}
+
+// Использование универсальной функции для запросов к API
+function fetchAndUpdateTobaccoStock() {
+  const url = 'http://188.68.221.107/api/v1/storage/tobacco/';
+  fetchDataFromAPI(url, processTobaccoData);
+}
+
+function fetchWorkers() {
+  const url = 'http://188.68.221.107/api/v1/worker/';
+  fetchDataFromAPI(url, processWorkerData);
 }
 
 
@@ -179,10 +201,16 @@ function fetchData() {
 //   toggleRowStyle(id); 
 // }
 
+// * Обрабатывает клики по документу для выполнения действий с элементами, основываясь на их data-action атрибутах.
+
+
 document.addEventListener('click', function(event) {
   if (event.target.matches('[data-action="toggle"]')) {
     const id = event.target.getAttribute('data-id');
-    toggleEditDeleteButtons(id);
+    // Определяем, к какой таблице принадлежит кнопка, по ее классу
+    const isStockTable = event.target.classList.contains('stock-table-options-button');
+    const isStaffTable = event.target.classList.contains('staff-table-options-button');
+    toggleEditDeleteButtons(id, isStockTable, isStaffTable);
   } else if (event.target.matches('[data-action="edit"]')) {
     const id = event.target.getAttribute('data-id');
     startEditing(id);
@@ -192,10 +220,19 @@ document.addEventListener('click', function(event) {
   }
 });
 
-function toggleEditDeleteButtons(id) {
-  const editDeleteDiv = document.getElementById(`edit-delete-${id}`);
-  editDeleteDiv.style.display = editDeleteDiv.style.display === 'none' ? '' : 'none';
+function toggleEditDeleteButtons(id, isStockTable, isStaffTable) {
+  let editDeleteDiv;
+  if (isStockTable) {
+    editDeleteDiv = document.querySelector(`.stock__table #edit-delete-${id}`);
+  } else if (isStaffTable) {
+    editDeleteDiv = document.querySelector(`.staffAdministration__table #edit-delete-${id}`);
+  }
+  
+  if (editDeleteDiv) {
+    editDeleteDiv.style.display = editDeleteDiv.style.display === 'none' ? '' : 'none';
+  }
 }
+
 
 
 // // ------------Меняем цвет строки_______________________
@@ -209,25 +246,18 @@ function toggleEditDeleteButtons(id) {
 // }
 
 
-
-function formatDate(dateString) {
-  const date = new Date(dateString);
-  const day = String(date.getDate()).padStart(2, '0');
-  const month = String(date.getMonth() + 1).padStart(2, '0'); // Месяцы начинаются с 0
-  const year = date.getFullYear();
-
-  return `${day}.${month}.${year}`;
-}
-
-
 function updateTable(data) {
   const tableBody = document.querySelector('.stock__table tbody');
-  tableBody.innerHTML = '';
+  tableBody.innerHTML = ''; // Очистить текущее содержимое
   data.forEach((item, index) => {
     const formattedPurchaseDate = formatDate(item.purchase_date);
     const formattedBestBeforeDate = formatDate(item.best_before_date);
-
-    const row = `<tr data-id="${item.id}">
+    
+    const row = document.createElement('tr'); // Создать новый элемент TR
+    row.setAttribute('data-id', item.id); // Установить атрибут data-id
+    
+    // Заполнить row содержимым
+    row.innerHTML = `
       <td>${index + 1}</td>
       <td>${item.brand}</td>
       <td>${item.supplier}</td>
@@ -238,40 +268,25 @@ function updateTable(data) {
       <td>${item.weight}</td>
       <td>${item.price}</td>
       <td class="actions">
-      <div class="action-buttons">
-  <button class="options-button" data-action="toggle" data-id="${item.id}">...</button>
-  <div class="edit-stock-delete-buttons" id="edit-delete-${item.id}" style="display: none;">
-    <button class="stock-edit-button" data-action="edit" data-id="${item.id}"><i class="ri-edit-line"></i> <span>Редактировать</span></button>
-    <button class="stock-delete-button" data-action="delete" data-id="${item.id}"> <i class="ri-delete-bin-6-line"></i><span>Удалить</span></button>
-  </div>
-</div>
+        <div class="action-buttons">
+          <button class="options-button stock-table-options-button" data-action="toggle" data-id="${item.id}">...</button>
+          <div class="table-edit-delete-buttons" id="edit-delete-${item.id}" style="display: none;">
+            <button class="table-edit-button stock-table-edit-button" data-action="edit" data-id="${item.id}"><i class="ri-edit-line"></i> <span>Редактировать</span></button>
+            <button class="table-delete-button stock-table-delete-button" data-action="delete" data-id="${item.id}"> <i class="ri-delete-bin-6-line"></i><span>Удалить</span></button>
+          </div>
+        </div>
       </td>
-    </tr>`;
-    tableBody.innerHTML += row;
+    `;
+
+    // Добавить row в tableBody
+    tableBody.appendChild(row);
   });
+  
   document.querySelector('.stock__box').style.display = data.length === 0 ? 'flex' : 'none';
 }
 
 
 
-
-document.addEventListener('DOMContentLoaded', () => {
-  fetchData();
-  document.querySelector('.stock__table').addEventListener('click', function(e) {
-    if (e.target.closest('.stock-edit-button')) {
-      const id = e.target.closest('.stock-edit-button').getAttribute('data-id');
-      editItem(id);
-    } else if (e.target.closest('.stock-delete-button')) {
-      const id = e.target.closest('.stock-delete-button').getAttribute('data-id');
-      deleteItem(id);
-    }
-  });
-});
-
-
-function editItem(id) {
-  console.log('Редактировать элемент с id:', id);
-}
 
 // Новая функция для начала редактирования
 function startEditing(id) {
@@ -315,19 +330,6 @@ function startEditing(id) {
   }
 }
 
-function toISOFormat(dateString) {
-  // Разбиваем строку "дд.мм.гггг" на части
-  const parts = dateString.split('.');
-  const day = parseInt(parts[0], 10);
-  const month = parseInt(parts[1], 10) - 1; // Месяц в JavaScript начинается с 0
-  const year = parseInt(parts[2], 10);
-
-  // Создаем объект Date
-  const date = new Date(Date.UTC(year, month, day));
-
-  // Возвращаем дату в формате ISO 8601
-  return date.toISOString();
-}
 
 // Функция для сохранения изменений
 function saveEdit(id) {
@@ -418,10 +420,10 @@ function updateTableRow(id, updatedData) {
     const actionCell = cells[cells.length - 1];
     actionCell.innerHTML = `
     <div class="action-buttons">
-    <button class="options-button" data-action="toggle" data-id="${id}">...</button>
-    <div class="edit-stock-delete-buttons" id="edit-delete-${id}" style="display: none;">
-      <button class="stock-edit-button" data-action="edit" data-id="${id}"><i class="ri-edit-line"></i> <span>Редактировать</span></button>
-      <button class="stock-delete-button" data-action="delete" data-id="${id}"> <i class="ri-delete-bin-6-line"></i><span>Удалить</span></button>
+    <button class="options-button stock-table-options-button" data-action="toggle" data-id="${id}">...</button>
+    <div class="table-edit-delete-buttons" id="edit-delete-${id}" style="display: none;">
+      <button class="table-edit-button stock-table-edit-button" data-action="edit" data-id="${id}"><i class="ri-edit-line"></i> <span>Редактировать</span></button>
+      <button class="table-delete-button stock-table-delete-button" data-action="delete" data-id="${id}"> <i class="ri-delete-bin-6-line"></i><span>Удалить</span></button>
     </div>
   </div>
     `;
@@ -443,25 +445,55 @@ function cancelEdit(id) {
   const actionCell = cells[cells.length - 1];
   actionCell.innerHTML = `
   <div class="action-buttons">
-  <button class="options-button" data-action="toggle" data-id="${id}">...</button>
-  <div class="edit-stock-delete-buttons" id="edit-delete-${id}" style="display: none;">
-    <button class="stock-edit-button" data-action="edit" data-id="${id}"><i class="ri-edit-line"></i> <span>Редактировать</span></button>
-    <button class="stock-delete-button" data-action="delete" data-id="${id}"> <i class="ri-delete-bin-6-line"></i><span>Удалить</span></button>
+  <button class="options-button stock-table-options-button" data-action="toggle" data-id="${id}">...</button>
+  <div class="table-edit-delete-buttons" id="edit-delete-${id}" style="display: none;">
+    <button class="table-edit-button stock-table-edit-button" data-action="edit" data-id="${id}"><i class="ri-edit-line"></i> <span>Редактировать</span></button>
+    <button class="table-delete-button stock-table-delete-button" data-action="delete" data-id="${id}"> <i class="ri-delete-bin-6-line"></i><span>Удалить</span></button>
   </div>
 </div>
   `;
 }
 
-// Добавим вызов startEditing в существующий обработчик событий
-document.querySelector('.stock__table').addEventListener('click', function(e) {
-  if (e.target.closest('.stock-edit-button')) {
-    const id = e.target.closest('.stock-edit-button').getAttribute('data-id');
-    startEditing(id); // Изменено на startEditing
-  } else if (e.target.closest('.stock-delete-button')) {
-    const id = e.target.closest('.stock-delete-button').getAttribute('data-id');
-    deleteItem(id);
-  }
+
+// ___!!!!
+
+
+document.addEventListener('DOMContentLoaded', () => {
+  // Загрузка данных о товарах
+  fetchAndUpdateTobaccoStock();
+  
+  // Загрузка данных о сотрудниках
+  fetchWorkers();
+
+  // Обработчик событий для таблицы товаров
+  document.querySelector('.stock__table').addEventListener('click', function(e) {
+    if (e.target.closest('.stock-table-edit-button')) {
+      const id = e.target.closest('.stock-table-edit-button').getAttribute('data-id');
+      startEditing(id);
+    } else if (e.target.closest('.stock-table-delete-button')) {
+      const id = e.target.closest('.stock-table-delete-button').getAttribute('data-id');
+      deleteItem(id);
+    }
+  });
+
+  // Обработчик событий для таблицы сотрудников
+  document.querySelector('.staffAdministration__table').addEventListener('click', function(e) {
+    if (e.target.closest('.staff-table-edit-button')) {
+      const id = e.target.closest('.staff-table-edit-button').getAttribute('data-id');
+      startEditingStaff(id); // Предполагается, что у вас есть функция startEditingStaff для редактирования данных сотрудников
+    } else if (e.target.closest('.staff-table-delete-button')) {
+      const id = e.target.closest('.staff-table-delete-button').getAttribute('data-id');
+      deleteStaff(id); // Предполагается, что у вас есть функция deleteStaff для удаления данных сотрудников
+    }
+  });
 });
+
+
+
+function editItem(id) {
+  console.log('Редактировать элемент с id:', id);
+}
+
 
 
 
@@ -668,7 +700,7 @@ document.addEventListener('DOMContentLoaded', function() {
       <input type="date" id="best_before_date-${number}" name="best_before_date" data-tab="${number}">
   </div>
   <div class="input-group">
-      <label for="weight-${number}">Остаток на скаде, г.</label>
+      <label for="weight-${number}">Вес, г.</label>
       <input type="number" id="weight-${number}" name="weight" data-tab="${number}">
   </div>
   <div class="input-group">
@@ -837,16 +869,9 @@ document.querySelector('.product-form__save-btn').addEventListener('click', func
 
   // Удаление всех табов и создание одного нового
   // resetTabs();
-  fetchData();
+  fetchAndUpdateTobaccoStock();
 });
 
-
-
-// Функция преобразования даты в строку ISO 8601
-function toISO8601String(dateString) {
-  const date = new Date(dateString);
-  return date.toISOString();
-}
 
 // Функция для сбора данных из всех заполненных табов
 function collectDataFromAllTabs() {
@@ -944,65 +969,393 @@ function sendAllTabsDataToServer() {
 }
 
 
-
 // _____________Администрирование персонала---------------------------
 
-// function getWorkersAndDisplayInTable() {
+
+// Функция для вставки данных в таблицу
+function insertDataIntoTable(data) {
+  const tableBody = document.querySelector('.staffAdministration__table tbody');
+  // Очистить текущее содержимое tbody
+  tableBody.innerHTML = '';
+
+  // Добавить строки в таблицу
+  data.forEach(worker => {
+    const row = document.createElement('tr');
+    // Установить атрибут data-id для строки, если у worker есть уникальный идентификатор
+    row.setAttribute('data-id', `staff-${worker.id}`);
+
+    // Создание и добавление данных пользователя в строку таблицы, включая кнопки действий
+    row.innerHTML = `
+      <td>${worker.user.first_name}</td>
+      <td>${worker.user.last_name}</td>
+      <td>${worker.user.email}</td>
+      <td>${worker.user.username}</td>
+      <td>${worker.user.user_role}</td>
+      <td class="actions">
+      <div class="action-buttons">
+        <button class="options-button staff-table-options-button" data-action="toggle" data-id="staff-${worker.id}">...</button>
+        <div class="table-edit-delete-buttons" id="edit-delete-staff-${worker.id}" style="display: none;">
+          <button class="table-edit-button staff-table-edit-button" data-action="edit" data-id="staff-${worker.id}"><i class="ri-edit-line"></i> <span>Редактировать</span></button>
+          <button class="table-delete-button staff-table-delete-button" data-action="delete" data-id="staff-${worker.id}"> <i class="ri-delete-bin-6-line"></i><span>Удалить</span></button>
+        </div>
+      </div>
+    </td>
+    `;
+
+    // Добавление строки в tbody
+    tableBody.appendChild(row);
+  });
+}
+
+
+
+
+// Функция для получения данных о пользователях
+// 222
+// function fetchWorkers() {
 //   const authToken = localStorage.getItem('authToken');
+
 //   if (!authToken) {
-//     console.error('Токен аутентификации не найден');
-//     return;
+//     console.error('Токен аутентификации не найден.');
+//     return; // Прекращаем выполнение, если токен не найден
 //   }
 
-//   // Создаем объект headers
-//   const headers = new Headers({
-//     'Content-Type': 'application/json',
-//     'Authorization': `Token ${authToken}`
-//   });
+//   console.log('Начало отправки данных, токен аутентификации найден.');
+  
 
-//   // Передаем headers в опции fetch
-//   fetch('http://188.68.221.107/api/v1/worker/', { headers: headers })
+//   const url = 'http://188.68.221.107/api/v1/worker/';
+
+//   // Настройка запроса
+//   const options = {
+//     method: 'GET',
+//     headers: {
+//       'Content-Type': 'application/json',
+//       'Authorization': `Token ${authToken}`
+//     }
+//   };
+
+//   // Отправка запроса
+//   fetch(url, options)
 //     .then(response => {
 //       if (!response.ok) {
-//         throw new Error('Network response was not ok ' + response.statusText);
+//         throw new Error('Network response was not ok');
 //       }
 //       return response.json();
 //     })
 //     .then(data => {
-//       updateTableWithWorkers(data);
+//       // Обработка полученных данных
+//       console.log(data);
+//       // Здесь вы можете добавить код для вставки данных в вашу таблицу
+//       insertDataIntoTable(data);
+
 //     })
 //     .catch(error => {
 //       console.error('There has been a problem with your fetch operation:', error);
 //     });
 // }
 
-// function updateTableWithWorkers(workers) {
-//   const tableBody = document.querySelector('.stock__table tbody');
-  
-//   tableBody.innerHTML = ''; // Очищаем текущие строки таблицы
+// Вызов функции при загрузке страницы
+document.addEventListener('DOMContentLoaded', fetchWorkers);
 
-//   // Для каждого работника создаем строку таблицы
-//   workers.forEach(worker => {
-//     // Предполагаем, что user_role и organization опциональны, поэтому используем оператор "||" для задания стандартных значений
-//     const role = worker.user.user_role || 'Не указана';
-//     const organization = worker.organization || 'Не указано';
 
-//     const row = `
-//       <tr>
-//         <td>${worker.user.first_name}</td>
-//         <td>${worker.user.last_name}</td>
-//         <td>${worker.user.email}</td>
-//         <td>${worker.user.username}</td>
-//         <td>${role}</td>
-//         <td>Дополнительные действия</td> <!-- Замените это на соответствующий контент -->
-//       </tr>
-//     `;
-//     tableBody.insertAdjacentHTML('beforeend', row);
-//   });
-// }
 
-// // Вызовите эту функцию, чтобы получить данные и обновить таблицу, когда это необходимо.
-// getWorkersAndDisplayInTable();
+// ___________Отправка на сервер  POST-----------------
+document.addEventListener('DOMContentLoaded', () => {
+  // Находим кнопку сохранения по классу
+  const saveButton = document.querySelector('.user-form__save-btn');
+
+  // Добавляем слушатель событий на кнопку для отправки формы
+  saveButton.addEventListener('click', function(e) {
+    sendFormData();
+  });
+});
+
+function sendFormData() {
+  // Получаем токен аутентификации из локального хранилища
+  const authToken = localStorage.getItem('authToken');
+
+  // Проверяем наличие токена аутентификации
+  if (!authToken) {
+    console.error('Токен аутентификации не найден.');
+    return; // Прекращаем выполнение, если токен не найден
+  }
+
+  console.log('Начало отправки данных, токен аутентификации найден.');
+
+  // Собираем данные из формы
+  const userData = {
+    user: {
+      username: document.getElementById('userLogin').value,
+      email: document.getElementById('email').value,
+      first_name: document.getElementById('name').value,
+      last_name: document.getElementById('surname').value,
+      password: document.getElementById('userPassword').value,
+      user_role: document.getElementById('role-select').value,
+    },
+    organization: 1
+  };
+
+  // Определяем URL API для отправки данных
+  const apiUrl = 'http://188.68.221.107/api/v1/worker/';
+
+  // Отправляем данные на сервер с помощью Fetch API
+  fetch(apiUrl, {
+    method: 'POST',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+      'Authorization': `Token ${authToken}`
+    },
+    body: JSON.stringify(userData)
+  })
+  .then(response => {
+    if (!response.ok) {
+      console.error(`Ошибка сети: Статус ${response.status} ${response.statusText}`);
+      return response.json().then(errorData => {
+        console.error('Детали ошибки:', errorData);
+        throw new Error('Ошибка при обработке запроса: ' + JSON.stringify(errorData));
+      });
+    }
+    return response.json();
+  })
+  .then(data => {
+    console.log('User created:', data);
+    // Здесь можно добавить дальнейшие действия после успешной отправки данных, например, очистку формы или отображение сообщения пользователю
+  })
+  .catch(error => {
+    console.error('Возникла проблема с вашей fetch-операцией:', error);
+  });
+}
+
+// ___________Отправка на сервер  POST-----------------
+
+    
+    //**/ ---------------Редактирование пользователей PATCH____________________
+// Функция для обновления данных работника
+// Функция для начала редактирования данных работника
+function startEditingStaff(id) {
+  const row = document.querySelector(`tr[data-id="staff-${id}"]`);
+  if (!row) {
+    console.error('Строка с id не найдена:', id);
+    return;
+  }
+  const cells = row.querySelectorAll('td');
+  // Превращаем каждую ячейку в редактируемое поле
+  cells.forEach((cell, index) => {
+    if (index > 0 && index < cells.length - 2) { 
+      const input = document.createElement('input');
+      input.type = 'text';
+      input.value = cell.innerText;
+      cell.innerText = '';
+      cell.appendChild(input);
+    }
+  });
+
+  // Заменяем кнопки на "Сохранить" и "Отменить"
+  const saveButton = document.createElement('button');
+  saveButton.textContent = 'Сохранить';
+  saveButton.classList.add('staff-save-button');
+  saveButton.onclick = () => saveWorkerEdit(id);
+
+  const cancelButton = document.createElement('button');
+  cancelButton.textContent = 'Отменить';
+  cancelButton.classList.add('staff-cancel-button');
+  cancelButton.onclick = () => staffCancelEdit(id); // Можно использовать уже существующую функцию staffCancelEdit
+
+  const buttonsContainer = document.getElementById(`edit-delete-staff-${id}`);
+  if (buttonsContainer) {
+    buttonsContainer.innerHTML = '';
+    buttonsContainer.appendChild(saveButton);
+    buttonsContainer.appendChild(cancelButton);
+  }
+}
+
+// Функция для сохранения изменений данных работника
+function saveWorkerEdit(id) {
+  const row = document.querySelector(`tr[data-id="staff-${id}"]`);
+  const inputs = row.querySelectorAll('input');
+
+  // Собираем данные из полей ввода
+  const updatedWorkerData = {
+    user: {
+      first_name: inputs[0].value,
+      last_name: inputs[1].value,
+      email: inputs[2].value,
+      username: inputs[3].value,
+      user_role: inputs[4].value
+    },
+    // Добавьте сюда другие данные, если они есть
+  };
+
+  // Отправляем изменения на сервер
+  updateWorkerData(id, updatedWorkerData);
+}
+
+// _____!!-----
+function staffCancelEdit(id) {
+  const row = document.querySelector(`tr[data-id="staff-${id}"]`);
+  const cells = row.querySelectorAll('td');
+
+  // Восстановление исходных значений ячеек, если они были изменены
+  // Ваш код для восстановления исходных значений ячеек...
+  if (row) {
+    // Восстановление исходной высоты строки
+    row.style.height = ''; // Удаление индивидуального стиля высоты для возврата к стандартному CSS
+  }
+  // Восстановление исходного состояния кнопок
+  const actionCell = cells[cells.length - 1];
+  actionCell.innerHTML = `
+    <div class="action-buttons">
+      <button class="options-button staff-table-options-button" data-action="toggle" data-id="staff-${id}">...</button>
+      <div class="table-edit-delete-buttons" id="edit-delete-staff-${id}" style="display: none;">
+        <button class="table-edit-button staff-table-edit-button" data-action="edit" data-id="staff-${id}"><i class="ri-edit-line"></i> <span>Редактировать</span></button>
+        <button class="table-delete-button staff-table-delete-button" data-action="delete" data-id="staff-${id}"> <i class="ri-delete-bin-6-line"></i><span>Удалить</span></button>
+      </div>
+    </div>
+  `;
+}
+
+// Функция для обновления строки в таблице работников
+function updateWorkerTableRow(id, updatedData) {
+const row = document.querySelector(`tr[data-id="staff-${id}"]`);
+  if (row) {
+    const cells = row.querySelectorAll('td');
+
+    // Обновляем текстовые ячейки
+    cells[0].innerText = updatedData.user.first_name;
+    cells[1].innerText = updatedData.user.last_name;
+    cells[2].innerText = updatedData.user.email;
+    cells[3].innerText = updatedData.user.username;
+
+    // Обновляем ячейку с ролью пользователя с использованием элемента select
+    const roleSelect = document.createElement('select');
+    roleSelect.classList.add('user-role-select'); // Добавьте классы по необходимости
+    // Предположим, у нас есть массив всех возможных ролей
+    const roles = ['HOOKAH', 'ADMIN']; // Примерный список ролей
+    roles.forEach(role => {
+      const option = document.createElement('option');
+      option.value = role;
+      option.text = role;
+      roleSelect.appendChild(option);
+      if (role === updatedData.user.user_role) {
+        option.selected = true;
+      }
+    });
+
+    // Очищаем содержимое ячейки и добавляем в неё select
+    cells[4].innerHTML = ''; // Очищаем текущее содержимое ячейки
+    cells[4].appendChild(roleSelect);
+
+    // Возвращаем кнопки "Редактировать" и "Удалить"
+    const actionCell = cells[cells.length - 1];
+    actionCell.innerHTML = `
+    <div class="action-buttons">
+    <button class="options-button staff-table-options-button" data-action="toggle" data-id="staff-${worker.id}">...</button>
+    <div class="table-edit-delete-buttons" id="edit-delete-staff-${worker.id}" style="display: none;">
+      <button class="table-edit-button staff-table-edit-button" data-action="edit" data-id="staff-${worker.id}"><i class="ri-edit-line"></i> <span>Редактировать</span></button>
+      <button class="table-delete-button staff-table-delete-button" data-action="delete" data-id="staff-${worker.id}"> <i class="ri-delete-bin-6-line"></i><span>Удалить</span></button>
+    </div>
+  </div>
+    `;
+  }
+}
+
+
+
+
+
+// Функция для отправки изменений на сервер
+function updateWorkerData(id, updatedWorkerData) {
+  const authToken = localStorage.getItem('authToken');
+  if (!authToken) {
+    console.error('Токен аутентификации не найден');
+    return;
+  }
+
+  const url = `http://188.68.221.107/api/v1/worker/${id}/`;
+  fetch(url, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Token ${authToken}`
+    },
+    body: JSON.stringify(updatedWorkerData)
+  })
+  .then(response => {
+    if (response.ok) {
+      console.log(`Обновлены данные работника с id: ${id}`);
+      return response.json();
+    } else {
+      return response.json().then(error => {
+        throw new Error(`Ошибка при обновлении: ${error.detail}`);
+      });
+    }
+  })
+  .then(updatedData => {
+    // Обновляем данные в таблице
+    updateWorkerTableRow(id, updatedData);
+    // Обновление данных в таблице можно сделать аналогично функции updateTableRow
+  })
+  .catch(error => {
+    console.error('Ошибка при обновлении данных работника:', error);
+  });
+}
+
+//* */ ____________________Удаление персонала------------------------------
+
+
+function deleteStaff(id) {
+  const authToken = localStorage.getItem('authToken'); // Или sessionStorage, в зависимости от того, где он хранится
+  if (!authToken) {
+    console.error('Токен аутентификации не найден');
+    return;
+  }
+
+  const url = `http://188.68.221.107/api/v1/worker/${id}/`;
+  fetch(url, {
+    method: 'DELETE',
+    headers: {
+      'Authorization': `Token ${authToken}`,
+      'Accept': 'application/json',
+    }
+  })
+  .then(response => {
+    if (response.ok) {
+      console.log(`Работник с id: ${id} удален`);
+      removeWorkerRow(id);
+    } else {
+      return response.json().then(error => {
+        throw new Error(`Ошибка при удалении работника: ${error.message}`);
+      });
+    }
+  })
+  .catch(error => {
+    console.error('Ошибка при удалении работника:', error);
+  });
+}
+
+function removeWorkerRow(id) {
+  const row = document.querySelector(`.staffAdministration__table tr[data-id="staff-${id}"]`);
+  if (row) {
+    row.remove();
+  }
+}
+
+document.addEventListener('click', function(event) {
+  if (event.target.matches('[data-action="edit"]')) {
+    const idWithPrefix = event.target.getAttribute('data-id'); // Получаем id с префиксом, например, "staff-123"
+    const id = idWithPrefix.replace('staff-', ''); // Убираем префикс, чтобы получить чистый id, например, "123"
+    startEditingStaff(id);
+  }
+  // Аналогично обрабатывайте другие действия, например, удаление
+});
+
+
+
+//* */ ____________________Удаление персонала------------------------------
+
+
+
 
 
 

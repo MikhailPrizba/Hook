@@ -1,5 +1,5 @@
 from core.filter import OrganizationFilter
 
 
-class TobaccoFilter(OrganizationFilter):
+class WorkerFilter(OrganizationFilter):
     pass

@@ -12,6 +12,7 @@ from rest_framework.decorators import action
 from django.db.models import Subquery
 
 
+
 class TobaccoViewSet(DeleteViewMixin, viewsets.ModelViewSet):
     queryset = Tobacco.objects.filter(is_active=True)
     serializer_class = TobaccoSerializer
@@ -36,7 +37,7 @@ class TobaccoViewSet(DeleteViewMixin, viewsets.ModelViewSet):
     def get_random_recipes(self, request, *args, **kwargs):
         queryset = self.filter_queryset(self.get_queryset())
         filtered_data = []
-        random_records = Generator.objects.filter(is_active=True).order_by("?")
+        random_records = Generator.objects.filter(is_active=True).order_by('?')
         for random_record in random_records:
             data = []
             min_counts = {"main": 12, "second": 6, "tint": 2}
@@ -48,17 +49,21 @@ class TobaccoViewSet(DeleteViewMixin, viewsets.ModelViewSet):
                         weight__gt=min_counts.get(combination, 0),
                     )
                     .order_by("?")
-                    .values()
                     .first()
+                    .values()
+
                 )
                 if queryset_data:
                     data.append(queryset_data)
+                else:
+                    break
             if len(data) != 3:
                 continue
             filtered_data.append(data)
             if len(filtered_data) == 3:
                 break
         return Response(filtered_data)
+
 
 
 class ReduceTobaccoWeightView(generics.GenericAPIView):

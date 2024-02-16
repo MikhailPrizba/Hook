@@ -736,14 +736,14 @@ section {
   transform: translateY(100%);
 }
 
-.stock__header {
+.section__header {
   display: flex;
   justify-content: space-between;
   padding: 18px 0;
   border-bottom: 0.6px solid #F9892B;
 }
 
-.stock__header-search {
+.form__search {
   display: flex;
   align-items: center;
   height: 38px;
@@ -757,17 +757,17 @@ section {
   align-items: center;
 }
 
-.stock__header-search button {
+.form__search button {
   border: none;
   background: none;
   margin: 0 10px;
 }
 
-.stock__header-search button i {
+.form__search button i {
   font-size: 18px;
 }
 
-.stock__header-search input[type=search] {
+.form__search input[type=search] {
   border: none; /* Убираем границу у input */
   outline: none; /* Убираем фокусную рамку браузера */
   padding: 5px 10px; /* Отступы для текста внутри input */
@@ -829,17 +829,17 @@ section {
   padding: 30px 0px;
 }
 
-.stock__table {
+.table {
   width: 100%;
   border-radius: 20px 20px 0px 0px;
   border-collapse: collapse;
 }
 
-.stock__table thead tr:first-child th:first-child {
+.table thead tr:first-child th:first-child {
   border-top-left-radius: 20px; /* Скругление левого верхнего угла */
 }
 
-.stock__table thead tr:first-child th:last-child {
+.table thead tr:first-child th:last-child {
   border-top-right-radius: 20px; /* Скругление правого верхнего угла */
 }
 
@@ -858,7 +858,7 @@ section {
   background: var(--F9882B, #F9882B);
 }
 
-.stock__table td {
+.table td {
   padding: 10px;
   border-bottom: 1px solid #ddd;
   color: #000;
@@ -898,7 +898,6 @@ section {
 .options-button {
   border-radius: 40%;
   background-color: transparent;
-  padding: 4px;
   border: none;
 }
 

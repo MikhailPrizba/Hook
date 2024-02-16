@@ -1,11 +1,11 @@
 
 
-export function animateText() {
+ function animateText() {
     // Увеличиваем смещение по Y, чтобы текст начинал анимацию выше
     gsap.from(".start-scrin__title", { duration: 1.5, opacity: 0, y: -100, ease: "power1.out" });
   }
 
-export function animateImage() {
+ function animateImage() {
     // Анимация для .image-back, чтобы он появлялся сразу
     gsap.to(".start-scrin__image-back", {duration: 1, translateX: 0, ease: "power1.out"});
 
@@ -14,7 +14,7 @@ export function animateImage() {
 }
 
 
-export function animatelist() {
+ function animatelist() {
     gsap.fromTo(
       ".business-processes__item",
       { y: 20, opacity: 0, visibility: 'hidden' }, // Начальные значения
@@ -30,3 +30,4 @@ export function animatelist() {
     );
   };
   
+  export { animateText, animateImage, animatelist };

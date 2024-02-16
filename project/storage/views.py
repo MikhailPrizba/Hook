@@ -74,6 +74,9 @@ class ReduceTobaccoWeightView(generics.GenericAPIView):
             weight_to_reduce = [12, 6, 2]
             data = request.data
 
+            if not data:
+                return Response({"message": "No data provided"}, status=status.HTTP_400_BAD_REQUEST)
+
             for index, tobacco in enumerate(data):
                 tobacco_taste = tobacco["taste"]
                 tobacco_taste_group = tobacco["taste_group"]
@@ -84,6 +87,7 @@ class ReduceTobaccoWeightView(generics.GenericAPIView):
                         taste=tobacco_taste,
                         taste_group=tobacco_taste_group,
                         weight__lt=weight_to_reduce_current,
+                        is_active=True,
                     )
                 except Tobacco.DoesNotExist:
                     continue

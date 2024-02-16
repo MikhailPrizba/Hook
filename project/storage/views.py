@@ -49,9 +49,8 @@ class TobaccoViewSet(DeleteViewMixin, viewsets.ModelViewSet):
                         weight__gt=min_counts.get(combination, 0),
                     )
                     .order_by("?")
-                    .first()
                     .values()
-
+                    .first()
                 )
                 if queryset_data:
                     data.append(queryset_data)

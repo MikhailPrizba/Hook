@@ -97,6 +97,7 @@ function refreshStaffTableWithWorkers(data) {
     const row = document.createElement('tr');
     // Установить атрибут data-id для строки, если у worker есть уникальный идентификатор
     row.setAttribute('data-id', worker.id);
+    const roleClass = getRoleClass(worker.user.user_role);
 
     // Создание и добавление данных пользователя в строку таблицы, включая кнопки действий
     row.innerHTML = `
@@ -104,7 +105,7 @@ function refreshStaffTableWithWorkers(data) {
       <td>${worker.user.last_name}</td>
       <td>${worker.user.email}</td>
       <td>${worker.user.username}</td>
-      <td>${worker.user.user_role}</td>
+      <td class="${roleClass}"> <span> ${worker.user.user_role}</span></td>
       <td class="actions">
       <div class="action-buttons">
         <button class="options-button staff-table-options-button" data-action="toggle" data-id="${worker.id}">...</button>
@@ -123,7 +124,17 @@ function refreshStaffTableWithWorkers(data) {
   });
 }
 
-
+function getRoleClass(userRole) {
+  switch(userRole) {
+    case 'ADMIN':
+      return 'role-admin'; // Пример: Стиль для администратора
+    case 'HOOKAH':
+      return 'role-user'; // Пример: Стиль для пользователя
+    // Добавьте дополнительные условия для других ролей
+    default:
+      return ''; // Если роль не установлена, не применять особый стиль
+  }
+}
 
 function updateStockItemRow(id, updatedData) {
   const row = document.querySelector(`tr[data-id="${id}"]`);

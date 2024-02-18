@@ -1,5 +1,33 @@
 // helpers.js
 
+import { animateText, animateImage, animateList, resetAnimations, startAnimations } from './animations.js';
+
+
+function showMainPage() {
+  document.querySelector('.wrap-authorization').style.display = 'none';
+  document.querySelector('.page-container').style.display = 'flex';
+  startAnimations();
+}
+
+// Функция для отображения страницы входа
+function showLoginPage() {
+  document.querySelector('.wrap-authorization').style.display = 'flex';
+  document.querySelector('.page-container').style.display = 'none';
+}
+
+// Обработчик события загрузки DOM
+function clearLoginFormFields() {
+  document.getElementById('login').value = '';
+  document.getElementById('password').value = '';
+}
+
+function setErrorMessage(message) {
+  const errorMessageElement = document.getElementById('error-message');
+  errorMessageElement.textContent = message;
+}
+
+
+
 // Форматирует дату в строку дд.мм.гггг
 function formatDate(dateString) {
   const date = new Date(dateString);
@@ -23,7 +51,9 @@ function toISO8601String(dateString) {
 }
 
 // Экспортируем функции для их использования в других частях приложения
-export { formatDate, toISOFormat, toISO8601String };
+export { formatDate, toISOFormat, toISO8601String,
+          showMainPage, showLoginPage, clearLoginFormFields, setErrorMessage
+};
 
 
 

@@ -105,11 +105,35 @@ line-height: normal; /* Добавляем жирный шрифт для мет
 .form-content input[type="email"]{
   box-sizing: border-box;
 
+  color:#7B7B7B;
   width: 100%; /* Растягиваем поля ввода на всю ширину родителя */
   padding: 10px;
-  border: 1px solid #ccc;
+  border: 1px solid #F9882B;
   border-radius: 4px;
   font-size: 14px; /* Устанавливаем размер шрифта */
+}
+
+.form-content input[type="text"]:focus,
+.form-content select:focus,
+.form-content input[type="date"]:focus,
+.form-content input[type="number"]:focus,
+.form-content input[type="email"]:focus {
+    outline: none; /* Убираем стандартную обводку */
+    border-color: #FAA055; /* Пример изменения цвета границы при фокусировке */
+    box-shadow: 0 0 5px 0 #FAA055; /* Пример добавления тени при фокусировке */
+    color: #0F0F0F; /* Пример изменения цвета текста при фокусировке */
+}
+
+.form-content select:focus {
+  color: #0F0F0F; /* Пример изменения цвета текста при фокусировке */
+}
+
+.form-content input[type="text"]:not(:placeholder-shown),
+.form-content select:not(:placeholder-shown),
+.form-content input[type="date"]:not(:placeholder-shown),
+.form-content input[type="number"]:not(:placeholder-shown),
+.form-content input[type="email"]:not(:placeholder-shown) {
+    color: black; /* Изменить цвет текста, когда ввод начат */
 }
 
 

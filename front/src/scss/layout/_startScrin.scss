@@ -1,12 +1,12 @@
 
-.start-scrin {
+.start-screen {
   position: relative; /* Для позиционирования дочернего абсолютно позиционированного элемента */
   display: flex;
   margin-left: 320px;
   height: 100vh;
 }
 
-.start-scrin__title {
+.start-screen__title {
   z-index: 2;
   display: flex;
   margin-top:100px;
@@ -14,22 +14,22 @@
 
 }
 
-.start-scrin__title-underlined{ 
+.start-screen__title-underlined{ 
   border-bottom: 6px solid rgb(249, 136, 43);
 }
 
-.start-scrin__title-color{
+.start-screen__title-color{
   color: rgb(249, 136, 43);
 }
 
-.start-scrin__title h2 {
+.start-screen__title h2 {
   font-size: 40px;
 font-weight: 700;
 text-align: center;
 }
 
 
-.start-scrin__business-processes{
+.start-screen__business-processes{
   // margin-top: 440px;
   z-index: 3;
 position: absolute;
@@ -71,7 +71,7 @@ background: rgb(255, 255, 255);
 }
 
 .business-processes__line1 .business-processes__item{
-  padding: 12px 50px;
+  padding: 14px 25px;
 }
 
 .business-processes__line2 .business-processes__item:first-child{
@@ -79,7 +79,7 @@ background: rgb(255, 255, 255);
 }
 
 .business-processes__line2 .business-processes__item:last-child{
-  padding: 3px 35px;
+  padding: 3px 40px;
 }
 
 .business-processes__line3{
@@ -109,22 +109,22 @@ line-height: 20px;
 text-align: center;
 }
 
-.start-scrin__image {
+.start-screen__image {
   position: absolute;
   right: 0;
   bottom: 0;
 }
 
-.start-scrin__image-container {
+.start-screen__image-container {
   position: relative;
 }
 
-.start-scrin__image-back {
+.start-screen__image-back {
   z-index: 1; 
   transform: translateX(100%);
 }
 
-.start-scrin__image-front {
+.start-screen__image-front {
   position: absolute;
   right: 0;
   bottom: 0;

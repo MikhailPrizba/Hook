@@ -3,15 +3,12 @@ import {  getAuthToken, makeFetchRequest  } from './apiService.js';
 import {  toISO8601String } from './helpers.js';
 
 
-
-
 function sendWorkerRegistrationData() {
   const authToken = getAuthToken(); 
   if (!authToken) { 
     console.error('Токен аутентификации не найден.');
     return;
   }
-  
   
   console.log('Начало отправки данных, токен аутентификации найден.');
 
@@ -44,10 +41,14 @@ function sendWorkerRegistrationData() {
     .then(data => {
       console.log('User created:', data);
       // Здесь можно добавить дальнейшие действия после успешной отправки данных
+     
+      // fetchAndUpdateWorkers();
     })
     .catch(error => {
       // Обработка ошибки уже реализована в makeFetchRequest
     });
+
+
 }
 
 // Функция отправки данных всех табов на сервер

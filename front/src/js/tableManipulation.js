@@ -66,7 +66,7 @@ function transformRowToEditableFormStock(id) {
   const cancelButton = document.createElement('button');
   cancelButton.textContent = 'Отменить';
   cancelButton.classList.add('stock-cancel-button');
-  cancelButton.onclick = () => cancelEdit(id);
+  cancelButton.onclick = () => resetStockItemEditState(id);
 
   const buttonsContainer = document.getElementById(`edit-delete-${id}`);
   if (buttonsContainer) {
@@ -95,20 +95,22 @@ function saveStockEditRowChanges(id) {
   };
   if (row) {
     // Восстановление исходной высоты строки
-    row.style.height = ''; // Удаление индивидуального стиля высоты для возврата к стандартному CSS
+    row.style.height = '';
+    row.style.background ='';
   }
+
   patchStockItemOnServer(id, updatedItem);
 }
 
-function cancelEdit(id) {
+function resetStockItemEditState(id) {
   const row = document.querySelector(`tr[data-id="${id}"]`);
   if (!row) return; // Досрочный выход из функции, если элемент не найден
 
   getOriginalStockData(id, updateStockItemRow); // Восстановление исходных данных
 
   // Восстановление исходной высоты строки
-  row.style.height = ''; // Удаление индивидуального стиля высоты для возврата к стандартному CSS
-
+  row.style.height = '';
+  row.style.background ='';
   // Восстановление исходного состояния кнопок
   const cells = row.querySelectorAll('td');
   const actionCell = cells[cells.length - 1];
@@ -116,7 +118,7 @@ function cancelEdit(id) {
     <div class="action-buttons">
       <button class="options-button stock-table-options-button" data-action="toggle" data-id="${id}">...</button>
       <div class="table-edit-delete-buttons" id="edit-delete-${id}" style="display: none;">
-        <button class="table-edit-button stock-table-edit-button" data-action="edit" data-id="${id}"><i class="ri-edit-2-line"></i> <span>Редактировать</span></button>
+        <button class="table-edit-button stock-table-edit-button" data-action="edit" data-id="${id}"><i class="ri-edit-2-line"></i> <span>Редактировать</span> </button>
         <button class="table-delete-button stock-table-delete-button" data-action="delete" data-id="${id}"><i class="ri-delete-bin-6-line"></i><span>Удалить</span></button>
       </div>
     </div>
@@ -194,7 +196,7 @@ function getOriginalStockData(id, callback) {
 //   const cancelButton = document.createElement('button');
 //   cancelButton.textContent = 'Отменить';
 //   cancelButton.classList.add('staff-cancel-button');
-//   cancelButton.onclick = () => staffCancelEdit(id); // Можно использовать уже существующую функцию staffCancelEdit
+//   cancelButton.onclick = () => resetStaffItemEditState(id); // Можно использовать уже существующую функцию resetStaffItemEditState
 
 //   const buttonsContainer = document.getElementById(`edit-delete-${id}`);
 //   if (buttonsContainer) {

@@ -15,8 +15,14 @@
   width: 320px;
   height: 100vh; /* Полная высота экрана */
 
-  transition: width 0.5s;
+  transition: width 0.7s ease;
 }
+
+.navigation, .menu__item-link, .supports span {
+  transition: opacity 0.7s ease-in-out, transform 0.7s ease-in-out;
+  transition-delay: 0.3s; /* Можно адаптировать задержку по вашему выбору */
+}
+
 
 .navigation{
   display: flex;
@@ -41,7 +47,7 @@
 
   &__item {
     display: flex;
-    gap: 28;
+    // gap: 28;
   }
 
 
@@ -157,7 +163,7 @@ display: none;
 }
 .header.collapsed {
   width: 80px; 
-  transition: width 0.5s; 
+  transition: width 0.7s; 
 }
 
 .header.collapsed .menu__item-link span,

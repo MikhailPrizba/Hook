@@ -53,8 +53,7 @@
   gap: 20px;
 }
 
-.stock__btn,
-.stock__btn-add {
+.stock__btn {
 display: flex;
 justify-content: center;
 align-items: center;
@@ -64,12 +63,14 @@ padding: 10px 15px;
 border-radius: 10px;
 color: var(--0F0F0F, #0F0F0F);
 text-align: center;
-font-family: Manrope;
 font-size: 14px;
 font-style: normal;
 font-weight: 700;
 line-height: normal;
 }
+
+
+.staffAdministration__btn-add,
 .stock__btn-add {
   background: var(--F9882B, #F9882B);
   cursor: pointer;
@@ -128,6 +129,8 @@ line-height: normal;
   font-weight: 600;
   line-height: normal;
 }
+
+
 
 .stock__thead {
   background: var(--F9882B, #F9882B);
@@ -328,13 +331,13 @@ background: var(--FDCFAA, #FDCFAA);
 
 }
 
-.stock-save-button {
+.stock-save-button,
+.staff-save-button {
   border: none;
   padding: 4px 6px;
   border-radius: 5px;
-background: #BFFAA4;
-  /* Caption 2/regular */
-  font-family: Manrope;
+  background: #BFFAA4;
+
   font-size: 12px;
   font-style: normal;
   font-weight: 500;
@@ -342,14 +345,13 @@ background: #BFFAA4;
   letter-spacing: -0.12px;
 }
 
-.stock-cancel-button {
+.stock-cancel-button,
+.staff-cancel-button {
   border: none;
   border-radius: 5px;
   background: #FD9F9F;
   padding: 4px 6px;
 
-  /* Caption 2/regular */
-  font-family: Manrope;
   font-size: 12px;
   font-style: normal;
   font-weight: 500;

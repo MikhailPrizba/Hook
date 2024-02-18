@@ -216,11 +216,39 @@ section {
 .form-content input[type=number],
 .form-content input[type=email] {
   box-sizing: border-box;
+  color: #7B7B7B;
   width: 100%; /* Растягиваем поля ввода на всю ширину родителя */
   padding: 10px;
-  border: 1px solid #ccc;
+  border: 1px solid #F9882B;
   border-radius: 4px;
   font-size: 14px; /* Устанавливаем размер шрифта */
+}
+
+.form-content input[type=text]:focus,
+.form-content select:focus,
+.form-content input[type=date]:focus,
+.form-content input[type=number]:focus,
+.form-content input[type=email]:focus {
+  outline: none; /* Убираем стандартную обводку */
+  border-color: #FAA055; /* Пример изменения цвета границы при фокусировке */
+  box-shadow: 0 0 5px 0 #FAA055; /* Пример добавления тени при фокусировке */
+  color: #0F0F0F; /* Пример изменения цвета текста при фокусировке */
+}
+
+.form-content select:focus {
+  color: #0F0F0F; /* Пример изменения цвета текста при фокусировке */
+}
+
+.form-content input[type=text]:not(:-moz-placeholder-shown), .form-content select:not(:-moz-placeholder-shown), .form-content input[type=date]:not(:-moz-placeholder-shown), .form-content input[type=number]:not(:-moz-placeholder-shown), .form-content input[type=email]:not(:-moz-placeholder-shown) {
+  color: black; /* Изменить цвет текста, когда ввод начат */
+}
+
+.form-content input[type=text]:not(:placeholder-shown),
+.form-content select:not(:placeholder-shown),
+.form-content input[type=date]:not(:placeholder-shown),
+.form-content input[type=number]:not(:placeholder-shown),
+.form-content input[type=email]:not(:placeholder-shown) {
+  color: black; /* Изменить цвет текста, когда ввод начат */
 }
 
 .form-body .input-group {
@@ -442,7 +470,12 @@ section {
   padding: 20px 20px;
   width: 320px;
   height: 100vh; /* Полная высота экрана */
-  transition: width 0.5s;
+  transition: width 0.7s ease;
+}
+
+.navigation, .menu__item-link, .supports span {
+  transition: opacity 0.7s ease-in-out, transform 0.7s ease-in-out;
+  transition-delay: 0.3s; /* Можно адаптировать задержку по вашему выбору */
 }
 
 .navigation {
@@ -468,7 +501,6 @@ section {
 }
 .menu__item {
   display: flex;
-  gap: 28;
 }
 .menu__item-link {
   color: #0F0F0F;
@@ -574,7 +606,7 @@ section {
 
 .header.collapsed {
   width: 80px;
-  transition: width 0.5s;
+  transition: width 0.7s;
 }
 
 .header.collapsed .menu__item-link span,
@@ -611,35 +643,35 @@ section {
   justify-content: center; /* Центрировать иконку внутри кнопки */
 }
 
-.start-scrin {
+.start-screen {
   position: relative; /* Для позиционирования дочернего абсолютно позиционированного элемента */
   display: flex;
   margin-left: 320px;
   height: 100vh;
 }
 
-.start-scrin__title {
+.start-screen__title {
   z-index: 2;
   display: flex;
   margin-top: 100px;
   margin-left: 310px;
 }
 
-.start-scrin__title-underlined {
+.start-screen__title-underlined {
   border-bottom: 6px solid rgb(249, 136, 43);
 }
 
-.start-scrin__title-color {
+.start-screen__title-color {
   color: rgb(249, 136, 43);
 }
 
-.start-scrin__title h2 {
+.start-screen__title h2 {
   font-size: 40px;
   font-weight: 700;
   text-align: center;
 }
 
-.start-scrin__business-processes {
+.start-screen__business-processes {
   z-index: 3;
   position: absolute;
   top: 50%;
@@ -674,7 +706,7 @@ section {
 }
 
 .business-processes__line1 .business-processes__item {
-  padding: 12px 50px;
+  padding: 14px 25px;
 }
 
 .business-processes__line2 .business-processes__item:first-child {
@@ -682,7 +714,7 @@ section {
 }
 
 .business-processes__line2 .business-processes__item:last-child {
-  padding: 3px 35px;
+  padding: 3px 40px;
 }
 
 .business-processes__line3 {
@@ -713,22 +745,22 @@ section {
   text-align: center;
 }
 
-.start-scrin__image {
+.start-screen__image {
   position: absolute;
   right: 0;
   bottom: 0;
 }
 
-.start-scrin__image-container {
+.start-screen__image-container {
   position: relative;
 }
 
-.start-scrin__image-back {
+.start-screen__image-back {
   z-index: 1;
   transform: translateX(100%);
 }
 
-.start-scrin__image-front {
+.start-screen__image-front {
   position: absolute;
   right: 0;
   bottom: 0;
@@ -785,8 +817,7 @@ section {
   gap: 20px;
 }
 
-.stock__btn,
-.stock__btn-add {
+.stock__btn {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -796,13 +827,13 @@ section {
   border-radius: 10px;
   color: var(--0F0F0F, #0F0F0F);
   text-align: center;
-  font-family: Manrope;
   font-size: 14px;
   font-style: normal;
   font-weight: 700;
   line-height: normal;
 }
 
+.staffAdministration__btn-add,
 .stock__btn-add {
   background: var(--F9882B, #F9882B);
   cursor: pointer;
@@ -1024,13 +1055,12 @@ section {
   background: var(--FDCFAA, #FDCFAA);
 }
 
-.stock-save-button {
+.stock-save-button,
+.staff-save-button {
   border: none;
   padding: 4px 6px;
   border-radius: 5px;
   background: #BFFAA4;
-  /* Caption 2/regular */
-  font-family: Manrope;
   font-size: 12px;
   font-style: normal;
   font-weight: 500;
@@ -1038,18 +1068,42 @@ section {
   letter-spacing: -0.12px;
 }
 
-.stock-cancel-button {
+.stock-cancel-button,
+.staff-cancel-button {
   border: none;
   border-radius: 5px;
   background: #FD9F9F;
   padding: 4px 6px;
-  /* Caption 2/regular */
-  font-family: Manrope;
   font-size: 12px;
   font-style: normal;
   font-weight: 500;
   line-height: 140%; /* 16.8px */
   letter-spacing: -0.12px;
+}
+
+.table td.role-admin span {
+  padding: 3px 28px;
+  border-radius: 20px;
+  background-color: rgb(253, 229, 97);
+}
+
+.table td.role-user span {
+  padding: 3px 20px;
+  border-radius: 20px;
+  background: rgb(255, 184, 47);
+}
+
+.recipeMenu_img {
+  margin-left: 320px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+}
+
+.recipeMenu_img img {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .wrap-authorization {

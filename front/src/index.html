@@ -26,9 +26,9 @@
       <nav>
         <ul class="menu">
           <li class="menu__item">
-            <a href="#stock" class="menu__item-link menu__item-btn button-accent"  > <i class=" ri ri-archive-line"></i><span>Склад</span></a></li>
-          <li class="menu__item"><a href="#staffAdministration" class="menu__item-link menu__item-btn button-accent" > <i class=" ri ri-user-settings-fill"></i> <span>Администрирование персонала</span></a></li>
-          <li class="menu__item"><a href="#recipeMenu" class="menu__item-link menu__item-btn button-accent" > <i class="ri ri-restaurant-fill"></i><span>Меню</span></a></li>
+            <a href="#stock" class="menu__item-link menu__item-btn button-accent" data-target="stock"> <i class=" ri ri-archive-line"></i><span>Склад</span></a></li>
+          <li class="menu__item"><a href="#staffAdministration" class="menu__item-link menu__item-btn button-accent" data-target="staffAdministration"> <i class=" ri ri-user-settings-fill"></i> <span>Администрирование персонала</span></a></li>
+          <li class="menu__item"><a href="#recipeMenu" class="menu__item-link menu__item-btn button-accent" data-target="recipeMenu"> <i class="ri ri-restaurant-fill"></i><span>Меню</span></a></li>
         </ul>
       </nav>
     </div>
@@ -40,15 +40,15 @@
   
     <main class="content">
       <section id="startScrin" class="startScrin active-section">
-        <div class="start-scrin__title" >
+        <div class="start-screen__title" >
           <h2>
-            Мы знаем, что <span class="start-scrin__title-underlined">важно</span>  для <br> 
-            <span class="start-scrin__title-color">
+            Мы знаем, что <span class="start-screen__title-underlined">важно</span>  для <br> 
+            <span class="start-screen__title-color">
               автоматизации кальянной!
             </span> 
           </h2>
         </div>
-      <div class="start-scrin__business-processes">
+      <div class="start-screen__business-processes">
         <div class="business-processes__line1">
           <div class="business-processes__item"><span>Миксология</span></div>
         </div>
@@ -65,19 +65,19 @@
           <div class="business-processes__item"><span>Администрирование <br> персонала</span></div>
         </div>
         <div class="business-processes__line5"> 
-          <div class="business-processes__item"><span>Ведение складского учета</span></div>
+          <div class="business-processes__item"><span>Ведение складского <br> учета</span></div>
         </div> 
       </div>
       
-      <div class="start-scrin__image">
-        <div class="start-scrin__image-container start-scrin__image-back">
+      <div class="start-screen__image">
+        <div class="start-screen__image-container start-screen__image-back">
           <img src="./assets/home_creen_animation/Vector.png" alt="1">
         </div>
-        <div class="start-scrin__image-container start-scrin__image-front">
+        <div class="start-screen__image-container start-screen__image-front">
           <img src="./assets/home_creen_animation/deviceframes.svg" alt="2">
         </div>
       </div>
-    </section>
+     </section>
       <section id="stock" class="stock">
         <div class="section__header">
         <div class="form__search form__stock-search">
@@ -98,16 +98,16 @@
         <table class="table table__stock">
           <thead class="stock__thead">
             <tr>
-              <th>№</th>
-              <th>Бренд</th>
-              <th>Поставщик</th>
-              <th>Вкус</th>
-              <th>Группа вкуса</th>
-              <th>Дата закупки</th>
-              <th>Срок годности</th>
-              <th>Остаток на складе, г.</th>
-              <th>Цена закупки, руб.</th>
-              <th></th>
+              <th class="stock__cell stock__cell--number">№</th>
+              <th class="stock__cell stock__cell--brand">Бренд</th>
+              <th class="stock__cell stock__cell--supplier">Поставщик</th>
+              <th class="stock__cell stock__cell--flavor">Вкус</th>
+              <th class="stock__cell stock__cell--flavor-group">Группа вкуса</th>
+              <th class="stock__cell stock__cell--purchase-date">Дата <br> закупки</th>
+              <th class="stock__cell stock__cell--expiration-date">Срок <br> годности</th>
+              <th class="stock__cell stock__cell--stock-remaining">Остаток на <br>складе, г.</th>
+              <th class="stock__cell stock__cell--purchase-price">Цена закупки, <br> руб.</th>
+              <th class="stock__cell stock__cell--actions"></th>
             </tr>
           </thead>
           <tbody>
@@ -204,8 +204,12 @@
         </div>
         
 
-        </section>
-      <section id="recipeMenu" class="recipeMenu">Меню</section>
+      </section>
+      <section id="recipeMenu" class="recipeMenu">
+        <div class="recipeMenu_img">
+          <img src="./assets/img/v-razrabotke.png" alt="v-razrabotke">
+        </div>
+      </section>
     </main>
   </div> 
      <div class="wrap-authorization">  
